@@ -1,0 +1,213 @@
+
+{% load static %}
+{% load l10n %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+        {% load static %}
+        <title>Kif</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <style type="text/css">
+
+            #upp{
+                width: 100%;
+            }
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            
+            @font-face {
+            font-family: 'FreeSans';
+            src: 'C:\Users\W10\Desktop\PythonDev\AutoUgovori\static\fonts\FreeSans\FreeSans.ttf';
+            } 
+            .header {
+                font-family: 'FreeSans';
+                font-size: 14px;
+                font-weight: 100;
+                text-align: center;
+                color: #0000FF;
+            }
+            .headerBold {
+                font-family: 'FreeSans';
+                font-size: 14px;
+                font-weight: 100;
+                text-align: center;
+                color: #0000FF;
+            }
+            
+            .title {
+                font-size: 16px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                font-family: 'FreeSans';
+                font-size: 10px;
+                padding: 5px 5px 0px 30px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsCenter {
+
+                font-family: 'FreeSans';
+                font-size: 10px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: center !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsLarge {
+
+                font-family: 'FreeSans';
+                font-size: 12px;
+                font-weight: 200;
+                padding: 10px 20px 0px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .detailsLeft {
+
+                font-family: 'FreeSans';
+                font-size: 13px;
+                font-weight: 200;
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .detailsRight {
+
+                font-family: 'FreeSans';
+                font-size: 10px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
+                
+            }
+
+            .detailsRightLarge {
+
+                font-family: 'FreeSans';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsheader {
+
+                font-family: 'FreeSans';
+                font-size: 13px;
+                font-weight: 100;
+                padding: 10px 20px 0px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .hrItem {
+                border: none;
+                height: 0.5px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            .alignright {
+            padding-right: 100px;
+            }
+        </style>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="header_content">
+            <div class="detailsheader">
+                <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class style="width: 25%"> 
+                                <img src="C:\Users\W10\Desktop\PythonDev\AutoUgovori\static\pictures\ac_alfa_mala.png"/>
+                        </td>
+                        <td class='detailsLarge' style="width: 75%">
+                            <p>{{firma.naziv}}, {{firma.adresa}}, JIB:{{firma.jib}}</p>
+                            <p>Žiro-račun: {{firma.zracun}}, Telefon {{firma.telefon}}, Faks: {{firma.fax}}</p>
+                            
+                        </td>
+                    </tr>
+                </table>
+                <hr class='hrItem' />
+            </div>
+        </div>
+
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'> Promet za period: {{start}} do {{end}}
+                </p>       
+            </div>
+        <div>
+       
+      
+       {% for poslovnica in poslovnice %}
+        <a class='detailsLeft' > {{ poslovnica }} </a>
+        <div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class='detailsCenter' style="width: 5.5%">Faktura</td>
+                    <td class='detailsCenter' style="width: 33%">Kupac</td>
+                    <td class='detailsCenter'style="width: 28.5">JMBG/JIB</td>
+                    <td class='detailsRight'style="width: 11%">Cijena</td>
+                    <td class='detailsRight' style="width: 11%">PDV</td>
+                    <td class='detailsRight' style="width: 11%">Ukupno</td>
+                </tr>
+
+                {%for x in poslovnica.stavke%}
+                    <tr>
+                            <td class='detailsCenter' style="width: 5.5%">{{x.broj_ugovora}}</td>
+                            <td class='details' style="width: 33%">{{x.ime_kupac}}</td>
+                            <td class='detailsCenter'style="width: 28.5%">{{x.jib_kupac}}</td>
+                            <td class='detailsRight'style="width: 11%">{{x.cijena_neto}}</td>
+                            <td class='detailsRight'style="width: 11%">{{x.pdv}}</td>
+                            <td class='detailsRight'style="width: 11%">{{x.cijena}}</td>   
+                    </tr> 
+                        
+                {%endfor%}
+                        <tr>                    
+                            <td class='detailsCenter' style="width: 5.5%"></td>
+                            <td class='details' style="width: 33%">Ukupno</td>
+                            <td class='detailsCenter'style="width: 28.5%">{{poslovnica.broj}}</td>
+                            <td class='detailsRight'style="width: 11%">{{poslovnica.cijena_neto}}</td>
+                            <td class='detailsRight'style="width: 11%">{{poslovnica.pdv}}</td>
+                            <td class='detailsRight'style="width: 11%">{{poslovnica.cijena}}</td>
+                        </tr>
+                        
+            
+            </table>
+        </div>
+        {% endfor %}
+        </div>   
+    </div>
+    <div>
+    <hr class='hrItem' />
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+                    
+                    <td class='detailsRightLarge'style="width: 67%">Ukupno</td>
+                    <td class='detailsRightLarge'style="width: 11%">{{totalcijena.cijena_neto__sum}}</td>
+                    <td class='detailsRightLarge'style="width: 11%">{{totalpdv.pdv__sum}}</td>
+                    <td class='detailsRightLarge'style="width: 11%">{{totalukupno.cijena__sum}}</td>
+                    
+                </tr>
+    </table>
+    </body>
+</html>
