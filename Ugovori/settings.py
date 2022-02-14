@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-k0&mi&!#r*w$8os#d+@*#$w$_a8fh9yh(lo82m-e$h!7smb8sf
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['']
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
