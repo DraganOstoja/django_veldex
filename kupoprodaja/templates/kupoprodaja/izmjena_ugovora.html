@@ -18,7 +18,9 @@
             </div>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                <div class= "grid grid-cols-3 gap-3 justify-evenly">
                 {{ form|crispy }}
+            </div>
                 {% if not ugovor.ugovor_zakljucen %}
                 <button type="submit" class="w-full text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">Izmjeni</button>
                 {% endif %}
