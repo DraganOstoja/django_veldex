@@ -422,8 +422,6 @@ class GenerateInvoiceList(View):
     def get(self, request, *args, **kwargs):
         ugovor=request.session['ugovor']
         startdate=request.session['startdate']
-        #startdate=datetime.strptime[startdate,"%d.%m.%Y"]
-        
         enddate=request.session['enddate']
         
         totalcijena = 0.00
@@ -486,6 +484,5 @@ def ReportView(request):
     request.session['startdate']=startdate
     request.session['enddate']=enddate
     if pregled == 'Pregled':
-        
         return GenerateInvoiceList.as_view()(request)
     return render(request, 'kupoprodaja/reports1.html', {'ugovori': ugovor}) 
