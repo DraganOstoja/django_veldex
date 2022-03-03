@@ -9,7 +9,7 @@
         {% load static %}
         <title>Kif</title>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+       
 
         <style type="text/css">
 
@@ -23,7 +23,7 @@
             
             @font-face {
             font-family: 'FreeSans';
-            src: 'C:\Users\W10\Desktop\PythonDev\AutoUgovori\static\fonts\FreeSans\FreeSans.ttf';
+            src: '{{base_dir}}\static\fonts\FreeSans\FreeSans.ttf';
             } 
             .header {
                 font-family: 'FreeSans';
@@ -137,7 +137,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td class style="width: 25%"> 
-                                <img src="C:\Users\W10\Desktop\PythonDev\AutoUgovori\static\pictures\ac_alfa_mala.png"/>
+                                <img src="{{base_dir}}\static\pictures\ac_alfa_mala.png"/>
                         </td>
                         <td class='detailsLarge' style="width: 75%">
                             <p>{{firma.naziv}}, {{firma.adresa}}, JIB:{{firma.jib}}</p>
@@ -200,14 +200,19 @@
     <div>
     <hr class='hrItem' />
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
+        
+        {% if user.is_superuser %}
+        <tr>
                     
                     <td class='detailsRightLarge'style="width: 67%">Ukupno</td>
                     <td class='detailsRightLarge'style="width: 11%">{{totalcijena.cijena_neto__sum}}</td>
                     <td class='detailsRightLarge'style="width: 11%">{{totalpdv.pdv__sum}}</td>
                     <td class='detailsRightLarge'style="width: 11%">{{totalukupno.cijena__sum}}</td>
                     
-                </tr>
+        </tr>
+        {% else %}
+
+        {% endif %}
     </table>
     </body>
 </html>

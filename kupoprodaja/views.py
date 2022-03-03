@@ -23,6 +23,7 @@ from django.db.models import F, Func
 from django.contrib.sessions.models import Session
 from django.utils import formats
 from datetime import datetime
+from django.contrib import messages
 class LandingPageView(LoginRequiredMixin, TemplateView):
     template_name= 'landing.html'
 
@@ -37,12 +38,12 @@ class ListaUgovora(LoginRequiredMixin, generic.ListView):
         queryset= Ugovor.objects.all()
         user= self.request.user
         if self.request.user.is_superuser:
-            queryset= Ugovor.objects.filter(storno=False).order_by('-datum')
+            queryset= Ugovor.objects.filter(storno=False).order_by('-broj_ugovora')
         elif user.bussines_unit_head:
             korisnik=User.objects.filter(poslovna_jedinica=user.poslovna_jedinica)
-            queryset= Ugovor.objects.filter(korisnik_id__in=korisnik).filter(storno=False).order_by('-datum')
+            queryset= Ugovor.objects.filter(korisnik_id__in=korisnik).filter(storno=False).order_by('-broj_ugovora')
         else:
-            queryset=queryset.filter(korisnik_id=self.request.user).filter(storno=False).order_by('-datum')
+            queryset=queryset.filter(korisnik_id=self.request.user).filter(storno=False).order_by('-broj_ugovora')
         return queryset
 
 class DetaljiUgovora(LoginRequiredMixin, generic.DetailView):
@@ -65,6 +66,8 @@ class DetaljiUgovora(LoginRequiredMixin, generic.DetailView):
 class KreirajUgovor(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
 
     model = Ugovor
+    success_message = 'Ugovor je uspješno dodat!'
+    error_message='Ugovor nije dodat! Pokušajte ponovo!'
     template_name='kupoprodaja/kreiraj_ugovor.html'
     fields=[
             'ime_komitent',
@@ -96,8 +99,7 @@ class KreirajUgovor(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView)
             'cijena',
             'gorivo'  
     ]
-    success_message = 'Ugovor je uspješno dodat!'
-    error_message='Ugovor nije dodat! Pokušajte ponovo!'
+    
 
     def form_valid(self, form):
         firma=Preduzece.objects.get(id=1)
@@ -120,6 +122,8 @@ class KreirajUgovor(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView)
 
 class IzmjeniUgovor(SuccessMessageMixin,LoginRequiredMixin, generic.UpdateView):
     template_name='kupoprodaja/izmjena_ugovora.html'
+    success_message = 'Ugovor je uspješno dodat!'
+    error_message='Ugovor nije dodat! Pokušajte ponovo!'
     model = Ugovor
     fields=[
             'ime_komitent',
@@ -164,6 +168,16 @@ class IzmjeniUgovor(SuccessMessageMixin,LoginRequiredMixin, generic.UpdateView):
         else:
             queryset=queryset.filter(korisnik_id=self.request.user)
         return queryset
+    def form_valid(self, form):
+        firma=Preduzece.objects.get(id=1)
+        form.instance.korisnik = self.request.user
+        form.instance.business_unit = self.request.user.poslovna_jedinica
+        form.instance.cijena_neto = form.instance.cijena/(1+float(firma.stopa_pdv))
+        form.instance.cijena_neto =round(form.instance.cijena_neto,2)
+        form.instance.pdv= form.instance.cijena_neto * float(firma.stopa_pdv)
+        form.instance.pdv = round(form.instance.pdv, 2)
+        
+        return super(IzmjeniUgovor, self).form_valid(form)
     def get_success_url(self):
         return reverse("kupoprodaja:detalji-ugovora", kwargs={'pk': self.object.pk})
 
@@ -232,8 +246,9 @@ class GeneratePDFContract(View):
         ugovor = get_object_or_404(Ugovor, pk=pk)
         template = get_template('kupoprodaja/contract.html')
         preduzece = get_object_or_404(Preduzece)
-        
+        BASE_DIR = Path(__file__).resolve().parent.parent
         context = {
+            'base_dir': BASE_DIR,
             'ugovor': ugovor,
             'firma': preduzece
         }
@@ -326,14 +341,14 @@ class ContractStornoRequested(LoginRequiredMixin, generic.ListView):
         user= self.request.user
         if self.request.user.is_superuser:
             queryset= Ugovor.objects.filter(storno=False).filter(storno_request=True).order_by('-datum')
-            print(queryset)
+            
         elif user.bussines_unit_head:
             korisnik=User.objects.filter(poslovna_jedinica=user.poslovna_jedinica)
             queryset= Ugovor.objects.filter(korisnik_id__in=korisnik).filter(storno=False).filter(storno_request=True).order_by('-datum')
-            print(queryset)
+           
         else:
             queryset=queryset.filter(korisnik_id=self.request.user).filter(storno=False).filter(storno_request=True).order_by('-datum')
-            print(queryset)
+            
         return queryset
 
 class ContractStornoApproved(LoginRequiredMixin, generic.ListView):
@@ -349,6 +364,7 @@ class ContractStornoApproved(LoginRequiredMixin, generic.ListView):
             queryset= Ugovor.objects.filter(korisnik_id__in=korisnik).filter(storno=True).order_by('-datum')
         else:
             queryset=queryset.filter(korisnik_id=self.request.user).filter(storno=True).order_by('-datum')
+        
         return queryset
 
 class ContractStornoApprove(SuccessMessageMixin,LoginRequiredMixin, generic.UpdateView):
@@ -379,6 +395,7 @@ class ContractStornoApprove(SuccessMessageMixin,LoginRequiredMixin, generic.Upda
         initial['storno'] = True
         return initial
     def get_success_url(self):
+        
         return reverse("kupoprodaja:storno-odobren")
 class ContractStornoDiscard(SuccessMessageMixin,LoginRequiredMixin, generic.UpdateView):
     template_name='kupoprodaja/storno_request_discard.html'
@@ -420,36 +437,47 @@ def is_valid_param(param):
          
 class GenerateInvoiceList(View):
     def get(self, request, *args, **kwargs):
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        user= self.request.user
+        korisnik=User.objects.filter(poslovna_jedinica=user.poslovna_jedinica).values('poslovna_jedinica')
         ugovor=request.session['ugovor']
         startdate=request.session['startdate']
         enddate=request.session['enddate']
-        
         totalcijena = 0.00
         totalpdv=0.00
         totalukupno=0.00
-        poslovnice= PoslovnaJedinica.objects.annotate(pdv=Sum('ugovor__pdv', filter=Q(ugovor__in=ugovor)),\
+        if user.is_superuser:
+            poslovnice= PoslovnaJedinica.objects.annotate(pdv=Sum('ugovor__pdv', filter=Q(ugovor__in=ugovor)),\
             cijena=Sum('ugovor__cijena', filter=Q(ugovor__in=ugovor)), broj=Count('ugovor__cijena', filter=Q(ugovor__in=ugovor)),\
             cijena_neto=Sum('ugovor__cijena_neto', filter=Q(ugovor__in=ugovor))).prefetch_related(Prefetch('ugovor_set',
             ugovor, to_attr='stavke'))
+        else:
+            poslovnice= PoslovnaJedinica.objects.filter(id__in=korisnik).annotate(pdv=Sum('ugovor__pdv', filter=Q(ugovor__in=ugovor)),\
+            cijena=Sum('ugovor__cijena', filter=Q(ugovor__in=ugovor)), broj=Count('ugovor__cijena', filter=Q(ugovor__in=ugovor)),\
+            cijena_neto=Sum('ugovor__cijena_neto', filter=Q(ugovor__in=ugovor))).prefetch_related(Prefetch('ugovor_set',
+            ugovor, to_attr='stavke'))
+
         
         totalcijena = ugovor.aggregate(Sum('cijena_neto'))
-        #totalcijena = {k: round(v, 2) for k, v in totalcijena.items()}
+        totalcijena = {k: round(v, 2) for k, v in totalcijena.items()}
        
         totalpdv = ugovor.aggregate(Sum('pdv'))
-        #totalpdv = {k: round(v, 2) for k, v in totalpdv.items()}
+        totalpdv = {k: round(v, 2) for k, v in totalpdv.items()}
         totalukupno = ugovor.aggregate(Sum('cijena'))
-        #totalukupno = {k: round(v, 2) for k, v in totalukupno.items()}
+        totalukupno = {k: round(v, 2) for k, v in totalukupno.items()}
 
         template = get_template('kupoprodaja/invoice_list1.html')
         preduzece = get_object_or_404(Preduzece)
         context = {
+                'base_dir': BASE_DIR,
                 'poslovnice': poslovnice,
                 'start': startdate,
                 'end': enddate,
                 'firma': preduzece,             
                 'totalukupno':totalukupno,
                 'totalcijena': totalcijena,
-                'totalpdv': totalpdv
+                'totalpdv': totalpdv,
+                'user': user
             }
         html = template.render(context)
         pdf = render_to_pdf('kupoprodaja/invoice_list1.html', context)
