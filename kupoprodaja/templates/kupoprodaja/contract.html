@@ -6,7 +6,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
-        {% load static %}
         <title>Ugovor</title>
         <style type="text/css">
             #upp{
@@ -16,15 +15,20 @@
                 font-weight: 200;
                 font-size: 14px;
             }
-            
             @font-face {
             font-family: 'FreeSans';
             src: '{{base_dir}}\static\fonts\FreeSans\FreeSans.ttf';
             } 
+            @font-face {
+                font-family: 'FreeSansBold';
+                src: '{{base_dir}}\static\fonts\FreeSans\FreeSansBold.ttf';
+                } 
+
             .header {
                 font-family: 'FreeSans';
-                font-size: 14px;
+                font-size: 18px;
                 font-weight: 100;
+                padding: 0px 5px 0px 5px; 
                 text-align: center;
                 color: #0000FF;
             }
@@ -32,53 +36,114 @@
                 font-family: 'FreeSans';
                 font-size: 14px;
                 font-weight: 100;
+                padding: 5px 5px 0px 5px;
                 text-align: center;
                 color: #0000FF;
             }
-            
             .title {
                 font-size: 16px;
                 font-weight: 100;
                /* text-align: right;*/
-               padding: 10px 20px 0px 20px;  
+               padding: 5px 5px 0px 5px;  
             }
             .title span {
                 color: #007cae;
             }
             .details {
                 font-family: 'FreeSans';
-                font-size: 11px;
-                padding: 10px 20px 0px 20px;
+                font-size: 12px;
+                padding: 5px 20px 0px 20px;
                 text-align: left !important;
                 /*margin-left: 40%;*/
                 
             }
             .detailsCar {
                 font-family: 'FreeSans';
-                font-size: 11px;
-                padding: 10px 20px 0px 20px;
-                text-align: justify !important;
-                /*margin-left: 40%;*/
+                font-size:12px;
+                padding: 0px 0px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 5%;*/
+                
+            }
+            .detailsCarCenter {
+                font-family: 'FreeSans';
+                font-size:12px;
+                padding: 0px 0px 0px 10px;
+                text-align: center !important;
+                /*margin-left: 5%;*/
+                
+            }
+            .detailsCarBold {
+                font-family: 'FreeSansBold';
+                font-size:11px;
+                padding: 4px 4px 0px 10px;
+                text-align: center !important;
+                /*margin-left: 5%;*/
                 
             }
             .detailsCenter {
 
+                font-family: 'FreeSansBold';
+                font-size: 12px;
+                /* font-weight:bolder !important; */
+                padding: 2px 5px 0px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+            }
+            .detailsCenterLeft {
+
+                font-family: 'FreeSansBold';
+                font-size: 12px;
+                /* font-weight:bolder !important; */
+                padding: 0px 10px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .detailsSignatures {
+
+                font-family: 'FreeSansBold';
+                font-size: 12px;
+                /* font-weight:bolder !important; */
+                padding: 10px 5px 5px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+            }
+            .detailsClients {
+
                 font-family: 'FreeSans';
                 font-size: 12px;
-                font-weight: 200;
-                padding: 10px 20px 0px 20px;
+                /* font-weight:bolder !important; */
+                padding: 0px 0px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .detailsClientsBold {
+
+                font-family: 'FreeSansBold';
+                font-size: 12px;
+                /* font-weight:bolder !important; */
+                padding: 0px 0px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .detailsCenterNew {
+
+                font-family: 'FreeSansBold';
+                font-size: 10px;
+                font-weight: 500;
+                padding: 0px 5px 0px 5px;
                 text-align: center !important;
                 /*margin-left: 40%;*/
                 
             }
-            .detailsCenterNew {
+            .detailsRight {
 
                 font-family: 'FreeSans';
-                font-size: 10px;
-                font-weight: 500;
-                padding: 10px 20px 0px 20px;
-                text-align: center !important;
-                /*margin-left: 40%;*/
+                font-size: 8px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
                 
             }
             .detailsheader {
@@ -91,19 +156,53 @@
                 /*margin-left: 40%;*/
                 
             }
-            .detailsRight {
+            .detailsRightBold {
 
-                font-family: 'FreeSans';
-                font-size: 13px;
+                font-family: 'FreeSansBold';
+                font-size: 12px;
                 font-weight: 200;
-                padding: 10px 20px 0px 20px;
+                padding: 0px 10px 0px 10px;
                 text-align: right !important;
-                /*margin-left: 40%;*/
+                /*margin-left: 0%;*/
+                
+            }
+
+            .HeaderDetailsLeft {
+
+                font-family: 'FreeSansBold';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .HeaderDetailsLeftLarge {
+
+                font-family: 'FreeSansBold';
+                font-size: 15px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .HeaderDetailsRight {
+
+                font-family: 'FreeSansBold';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
                 
             }
             .hrItem {
                 border: none;
                 height: 0.5px;
+                margin-bottom: 5px;
+                margin-top: 0px;
+               
                 /* Set the hr color */
                 color: #333; /* old IE */
                 background-color: #fff; /* Modern Browsers */
@@ -111,111 +210,208 @@
             .alignright {
             padding-right: 100px;
             }
+            p {
+                margin: 0px;
+                padding: 0px 10px 0px 10px;
+             }
         </style>
         <meta charset="UTF-8">
     </head>
     <body>
         <div id="header_content">
-            <div class="detailsheader">
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td class style="width: 25%"> 
-                                <img src="{{base_dir}}\static\pictures\ac_alfa_mala.png"/>
+                        <td class='HeaderDetailsLeft' style="width: 38%">
+                            <p class='HeaderDetailsLeftLarge'>{{firma.naziv}} </p>
+                            <p> {{firma.adresa}},{{firma.mjesto}} </p>
+                            <p> ID:{{firma.jib}} </p>
+                            <p> Br.rješenja:{{firma.broj_rjesenja}} </p>
+                            <p> Porezni broj: {{firma.porezni_broj}} </p>
                         </td>
-                        <td class='detailsCenter' style="width: 75%">
-                            <p>{{firma.naziv}}, {{firma.adresa}}, JIB:{{firma.jib}}</p>
-                            <p>Žiro-račun: {{firma.zracun}}, Telefon {{firma.telefon}}, Faks: {{firma.fax}}</p>
-                            
+                        <td  cellpadding="0" style="width: 18%"> 
+                                <img src="{{base_dir}}\static\pictures\veldex_mala.jpg"/>
+                        </td>
+                        <td class='HeaderDetailsRight' style="width: 27%">
+                            <p>Tel/Faks: {{firma.fax}} </p>
+                            <p> Mob: {{firma.telefon}}</p>
+                            <p> {{firma.mail}} </p>
+                            <p> {{firma.web_site}} </p>
+
+                        </td>
+                        <td cellpadding="0" style="width: 17%">
+                            <img src="{{base_dir}}\static\pictures\qr_dokumentacija.png"/>
                         </td>
                     </tr>
                 </table>
                 <hr class='hrItem' />
-            </div>
+            
         </div>
-
         <div class='wrapper'>
             <div class='header'>
-                <p class='title'>{%if not ugovor.storno %} Ugovor o komisionoj prodaji broj: {{ugovor.broj_ugovora}}/{{ugovor.datum|date:'Y'}} 
-                {% else %} Stornirano-Ugovor o komisionoj prodaji broj: {{ugovor.broj_ugovora}}/{{ugovor.datum|date:'Y'}}
-                {%endif%}
-                </p>
-                        
+
+                <table id='ContractInfo'width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td  style="width: 100%">
+                            {%if not ugovor.storno %} Račun br.: No. {{ugovor.broj_ugovora}} BF: {{ugovor.broj_fiskalnog_racuna}} 
+                            {% else %} Stornirano-Račun br.: No. {{ugovor.broj_ugovora}} BF: {{ugovor.broj_fiskalnog_racuna}} 
+                            {%endif%}   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  style="width: 100%">
+                            UGOVOR O KOMISIONOJ PRODAJI MOTORNIH VOZILA
+                        </td>
+                    </tr>
+                </table>
+
             </div>
         <div>
-        <div class='details'>
-            Zaključen dana {{ ugovor.datum|date:'d.m.Y' }} između {{firma.naziv}} kao komisionara sa jedne strane
-             i vlasnika vozila {{ugovor.ime_komitent}} JMBG/JIB {{ugovor.jib_komitent}}, adresa {{ugovor.ulica_komitent}}, {{ugovor.grad_komitent}}
-            kao komitenta sa druge strane. <br/>
+        <div class='detailsClients'>
+            <table id='ClientInfo'width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td  style="width: 100%">
+                        Zaključen dana <l class='detailsClientsBold'>{{ ugovor.datum|date:'d.m.Y' }}</l> godine u <l class='detailsClientsBold'> {{ugovor.mjesto_zakljucenja}} </l>između:
+                    </td>
+                </tr>
+                <tr>
+                    <td  style="width: 100%">
+                        1. Komitenta <l class='detailsClientsBold'>{{ugovor.ime_komitent}} </l> JMB <l class='detailsClientsBold'>{{ugovor.jib_komitent}}</l>, LK br. <l class='detailsClientsBold'>{{ugovor.lk_komitent}}</l>
+                    </td>
+                </tr>
+                <tr>
+                    <td  style="width: 100%">
+                        2. Komisionara <l class='detailsClientsBold'>{{firma.naziv}} za proizvodnju promet i usluge, {{firma.mjesto}}</l>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class='detailsCenter'>
-            Član 1.</br>
+           I
         </div>
-        <div class='details'>
-            Komisionar se obavezuje da u svoje ime, a za račun komitenta proda vozilo:
+        <div class='details' >
+           Komisionar se obavezuje da u svoje ime za račun komitenta uz ugovorenu proviziju otkupi i proda komitentovo rabljeno motorno vozilo.
         </div>
-        <div class='detailsCar'>
-            Vrsta vozila: {{ugovor.vrsta_vozila}} vozilo na <b>{{ugovor.gorivo}} pogon, marke {{ugovor.marka_vozila}} tip {{ugovor.opis}} sa brojem šasije {{ugovor.broj_sasije}} i brojem motora {{ugovor.broj_motora}}
-        </div>
-        <div class='detailsCar'>
-            Godište vozila je {{ugovor.godiste}}, boja vozila je {{ugovor.boja}}, zapremina motora {{ugovor.zapremina}} ccm sa snagom od {{ugovor.snaga}} KW. Nosivost vozila je {{ugovor.nosivost}}
-        </div>
-        <div class='detailsCar'>
-            Broj sjedišta u vozilu je {{ugovor.sjedista}}, registarska oznaka vozila {{ugovor.reg_oznaka}}. Cijena vozila je {{ugovor.vrijednost_vozila}} KM </br>
+
+        <div >
+            <table width="100%" cellspacing="0" cellpadding="0" style="border: 1px solid black; border-collapse: collapse;">
+                <tr style="border: none;">
+                    <td class= 'headerBold' style="border: none; width: 100%" colspan="2">PODACI O VOZILU
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td class='detailsCar'style="border: none; width: 50%">Registarska oznaka:<l class="detailsCarBold">{{ugovor.reg_oznaka}}</l></td>
+                    <td class='detailsCar' style="border: none; width: 50%">Broj motora: <l class="detailsCarBold">{{ugovor.broj_motora}}</l></td>
+                </tr>
+
+                <tr style="border: none;">
+                    <td class='detailsCar' style="border: none; width: 50%">Vrsta vozila: <l class="detailsCarBold">{{ugovor.vrsta_vozila}}</l></td>
+                    <td class='detailsCar' style="border: none; width: 50%">Godina proizvodnje: <l class="detailsCarBold">{{ugovor.godiste|cut:'.'}}</l></td>
+                </tr>
+
+                <tr style="border: none;">
+                    <td class='detailsCar'style="border: none; width: 50%, display:inline">Marka i tip vozila:<l class="detailsCarBold">{{ugovor.marka_vozila}}, {{ugovor.opis}}</l></td>
+                    <td class='detailsCar' style="border: none; width: 50%">Snaga motora: <l class="detailsCarBold">{{ugovor.snaga}}</l> kw</td> 
+                </tr>
+                <tr style="border: none;">
+                    <td class='detailsCar' style="border: none; width: 50%">Broj šasije: <l class="detailsCarBold">{{ugovor.broj_sasije}}</l></td>
+                    <td class='detailsCar'style="border: none; width: 50%">Zapremina motora: <l class="detailsCarBold">{{ugovor.zapremina|cut:'.'}}</l> cm3</td>
+                </tr>
+                <tr style="border: none;">
+                    <td class='detailsCar'style="border: none; width: 50%">Težina vozila:<l class="detailsCarBold">{{ugovor.masa_vozila}}</l></td>
+                    <td class='detailsCar' style="border: none; width: 50%">Nosivost: <l class="detailsCarBold">{{ugovor.nosivost}}</l></td>
+                </tr>
+
+                 <tr style="border: none;">
+                    <td class='detailsCar'style="border: none; width: 50%">Nabavna i prodajna cijena vozila: <l class="detailsCarBold">{{ugovor.vrijednost_vozila|floatformat:2}} KM</l></td>
+                    <td  class='detailsCar'style="border: none; width: 50%">Slovima: <l class="detailsCarBold">{{vrijednost|cut:' '}} i {{decimalni_broj|floatformat:0}}/100 KM</l> </td>
+                 </tr>
+            </table>
         </div>
         <div class='detailsCenter'>
-            Član 2.</br>
+            II
+        </div>
+
+        <div class='detailsClients'>
+
+
+            <table id='BuyerInfo'width="100%" cellspacing="0" cellpadding="0"  style="border: 1px solid black; border-collapse: collapse;">
+                <tr style="border: none;">
+                    <td class= 'headerBold' style="border: none;">
+                        PODACI O KUPCU
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td  style="width: 100% border: none;">
+                        Kupac <l class='detailsClientsBold'>{{ugovor.ime_kupac}} </l> JMB <l class='detailsClientsBold'>{{ugovor.jib_kupac}}</l>, LK br. <l class='detailsClientsBold'>{{ugovor.lk_kupac}}</l>
+                        adresa <l class='detailsClientsBold'>{{ugovor.ulica_kupac}}</l> Mjesto/Općina  <l class='detailsClientsBold'>{{ugovor.grad_kupac}} </l>
+                    </td>
+                </tr>
+
+            </table>
         </div>
         <div class='details'>
-            Naplatu sredstava ostvarenih prodajom vozila iz člana 1. ovog Ugovora vršiće komitent. Komitent oslobađa komisionara bilo kakve obaveze i odgovornosti po osnovu člana 1. ovog Ugovora.
+           Kupac (novi vlasnik) je preuzeo vozilo dana <l class='detailsClientsBold'>{{ugovor.datum_preuzimanja|date:'d.m.Y'}}</l> u <l class='detailsClientsBold'>{{ugovor.vrijeme_preuzimanja}}</l>
+           Sve troškovi nastali na ime prekršaja i kazni do datuma i sata preuzimanja vozila snosit će stari vlasnik/komitent, a od datuma i sata preuzimanja snosit će novi vlasnik (kupac).
         </div>
         <div class='detailsCenter'>
-            Član 3.</br>
+            III
         </div>
         <div class='details'>
-            Za sve što nije predviđeno Ugovorom važe odredbe o obligacionim odnosima. U slučaju spora ugovorena je nadležnost suda u Banjaluci.
+          Vozilo se kupuje po principu viđeno kupljeno te se naknadne reklamacije neće uvažavati.
         </div>
         <div class='detailsCenter'>
-            Član 4.</br>
+            IV
         </div>
         <div class='details'>
-            Ugovor je sačinjen u četiri (4) primjerka, od kojih se dva (2) nalaze kod kupca, jedan (1) kod komitenta, a jedan (1) zadržava komisionar.
+            Komitent/prodavac dole svojim potpisom potvrđuje da je uredno isplaćen cjelokupan iznos od dogovorene cijene za predmetno vozilo i da nema nikakvih potraživanja
+            od Komisionara i Kupca. Dole svojim potpisom pod punom materijalnom i krivičnom odgovornosti Komitent/Prodavac potvrđuje da u trenutku predaje vozila Novom Vlasniku (kupcu)
+            za predmetno vozilo nema izrečenih mjera zabrane otuđenja/prodaje istog i da nema neplaćenih novčanih kazni.
         </div>
         <div class='details'>
-            Potpis komitenta: _____________________                              Komisionar: _____________________
+            Vozilo je predato i komitent isplaćen uz potpis <l class='detailsClientsBold'>{{ugovor.ime_komitent}} ________________________
         </div>
         <div class='details'>
-            Broj lične karte: {{ugovor.lk_komitent}}, MUP {{ugovor.grad_komitent}}
-        </div>
-        <div class='headerBold'>
-                <p class='title'>Račun broj: {{ugovor.broj_ugovora}}/{{ugovor.datum|date:'Y'}} </p>
-            </div>
-        <div class='details'>
-        Kupac vozila je {{ugovor.ime_kupac}} JMBG/JIB {{ugovor.jib_kupac}}, adresa {{ugovor.ulica_kupac}}, {{ugovor.grad_kupac}}
-        </div>
-        <div class='details'>
-            Vrsta vozila: {{ugovor.vrsta_vozila}} vozilo na <b>{{ugovor.gorivo}} pogon, marke {{ugovor.marka_vozila}} tip {{ugovor.opis}} sa brojem šasije {{ugovor.broj_sasije}} i brojem motora {{ugovor.broj_motora}}
+
+            
+            {%if ugovor.ima_punomoc %} 
+            Na osnovu punomoći broj <l class='detailsClientsBold'>{{ugovor.broj_punomoci}}</l> JMB punomoćnika <l class='detailsClientsBold'>{{ugovor.jmb_punomocnik}}</l>
+            L.K. <l class='detailsClientsBold'>{{ugovor.lk_punomocnik}} </l> ________________________
+            {% else %}  
+            {%endif%} 
         </div>
         <div class='details'>
-            Godište vozila je {{ugovor.godiste}}, boja vozila je {{ugovor.boja}}, zapremina motora {{ugovor.zapremina}} ccm sa snagom od {{ugovor.snaga}} KW. Nosivost vozila je {{ugovor.nosivost}}
+           Vozilo preuzeto uz potpis kupca <l class='detailsClientsBold'>{{ugovor.ime_kupac}} </l> ________________________
+        </div>
+        <div class='detailsCenter'>
+            V
         </div>
         <div class='details'>
-            Broj sjedišta u vozilu je {{ugovor.sjedista}}, registarska oznaka vozila {{ugovor.reg_oznaka}}. Cijena vozila je: {{ugovor.vrijednost_vozila}} KM </br>
+            U slučaju spora nadležan je sud u Tuzli.
         </div>
         <div class='details'>
-            Potpis kupca: _____________________                              Komisionar: _____________________
+           Komisionar (Ovlaštena osoba za zaključivanje Ugovora), se obavezuje da sve poslove u vezi sa ovim Ugovorm obavi stručno i prema postojećim propisima i zakonima
+           za ovu vrstu posla. Ovlaštena osoba svojim potpisom pod materijalnom i krivičnom odgovornosti potvrđuje da su se stranke Komitent/Prodavac i Kupac svojeručno potpisali.
+           Svu materijalnu i krivičnu odgovornost za upisivanje lažnih podataka i falsifikovanje potpisa snosi isključivo osoba koja je sačinila Ugovor.
         </div>
         <div class='details'>
-            Broj lične karte: {{ugovor.lk_kupac}}, MUP {{ugovor.grad_kupac}}
+            Komisionar (ovlaštena osoba koja je sačinila Ugovor )<l class='detailsClientsBold'>{{ugovor.korisnik.first_name}} {{ugovor.korisnik.last_name}}</l> ____________________
+         </div>
+
+        <div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class='detailsCenterLeft'style="width: 33%">Komisiona provizija {{ugovor.cijena_neto|floatformat:2}} KM</td>
+                   
+                </tr>
+                <tr>
+                    <td class='detailsCenterLeft'style="width: 33%">Komisionar nije u PDV sistemu </td>
+                    <td class='detailsRightBold'style="width: 67%">{{order}}. {{unique_sentence}} </td>
+                </tr>
+                <tr>
+                    <td class='detailsCenterLeft' style="width: 33%">Ukupno: {{ugovor.cijena|floatformat:2}} KM </td>  
+                </tr>
+            </table>
         </div>
-        <div class='details'>
-            <p>Cjena bez PDV: {{ugovor.cijena_neto}} KM </p>
-            <p>PDV: {{ugovor.pdv|localize}} KM </p>
-            <p>Cijena ugovora: {{ugovor.cijena}} KM </p>
-        </div>
-        <hr class='hrItem' />
-        <div class='detailsCenterNew'>
-            Napomena: Kupac je preuzeo vozilo u viđenom stanju, uporedio brojeve motora i šasije kao i ostale tehničke podatke u saobraćajnoj dozvoli i nakon potpisa računa nema pravo naknadne reklamacije.
-        </div>
-    </div>
+
     </body>
 </html>

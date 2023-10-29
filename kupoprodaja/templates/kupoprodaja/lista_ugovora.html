@@ -1,92 +1,432 @@
 {% extends 'base.html' %}
 {% block content%}
+{% load static %}
 
+<head>
+    <script src="{% static "/js/jquery.js" %}"></script>
+    <script src="{% static "/js/autocomplete.js" %}"></script>
+    <link
+    rel="stylesheet"
+    href="{% static "/css/autocomplete.css" %}"
+    />
+</head>
+<body>
 <section class="text-gray-700 body-font">
-  <div class="container px-5 py-24 mx-auto flex flex-wrap">
+  <div class="container px-5 py-5 mx-auto flex flex-wrap">
         <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
           <div>
               <h1 class="text-4xl text-gray-800">Ugovori</h1>
           </div>
+          <div id="autocomplete" class="autocomplete" style="width: 400px">
+            <input class="autocomplete-input "  placeholder="Pretraži" />
+            <ul class="autocomplete-result-list"></ul>
+          </div>
           <div>
+           
               <a class="text-red-500 hover:text-blue-500" href="{% url 'kupoprodaja:kreiraj-ugovor' %}"> Dodaj novi ugovor</a>
           </div>
         </div>
-                <div class="flex flex-col w-full">
+
+        <div class="flex flex-col w-full">
+            <div class="message-container">
+                {% for message in messages %}
+                    <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                        {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                        {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                        py-2 px-4 rounded-md shadow-md {% if message.class %}{{ message.class }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="min-w-full divide-y divide-gray-200" >
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             Broj
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             Kupac
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             JMBG kupca
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             Prodavac
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             Vozilo
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Broj Šasije
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
                             Datum
                             </th>
-                            <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Edit</span>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
+                            Korisnik
                             </th>
+                            {% if request.user.is_authenticated %}
+                                    {% if request.user.is_superuser %}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider text-center">
+                            Naplaćeno
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-black-500 uppercase tracking-wider">
+                            </th>
+                                {%else%}
+                                {%endif%}
+                                {%endif%}
                         </tr>
                     </thead>
                     <tbody>
                         {% for ugovor in ugovori %}
                             <tr class="bg-white">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" >
-                                    {% if ugovor.ugovor_zakljucen %}
-                                    <a class="text-blue-500 hover:text-blue-800" href="{% url 'kupoprodaja:ugovor' ugovor.pk %}" > {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                <td class="px-6 py-3  text-xs text-gray-500" >
+                                    {% if request.user.is_superuser %}
+                                        {% if ugovor.ugovor_zakljucen %}
+                                        <a class="text-blue-500 hover:text-blue-800" href="{% url 'kupoprodaja:ugovor' ugovor.pk %}" > {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                        {% else %}
+                                        <a class="text-black-500 hover:text-blue-800"> {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                        {% endif%}
                                     {% else %}
+                                    
                                     <a class="text-black-500 hover:text-blue-800"> {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                    
+                                    
                                     {% endif %}
+                                
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    <a class="text-blue-500 hover:text-blue-800" href="{% url 'kupoprodaja:detalji-ugovora' ugovor.pk %}">{{ ugovor.ime_kupac }}</a>
+                                <td class="px-6 py-3 text-xs font-medium text-gray-900">
+                                    <a class="text-blue-500 hover:text-blue-800" href="{% url 'kupoprodaja:izmjena-ugovora' ugovor.pk %}">{{ ugovor.ime_kupac }}</a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-3 text-xs text-black-500">
                                     {{ ugovor.jib_kupac }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-3 text-xs text-black-500">
                                     {{ ugovor.ime_komitent }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class=" px-6 py-3 text-xs text-black-500 break-words overflow-hidden">
                                     {{ ugovor.marka_vozila }} {{ugovor.opis}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ ugovor.broj_sasije}}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+
+                                <td class="px-6 py-3 text-xs text-black-500">
                                     {{ ugovor.datum|date:'d.m.Y'}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="{% url 'kupoprodaja:izmjena-ugovora' ugovor.pk %}" class="text-red-600 hover:text-red-900">
-                                        Izmjene
-                                    </a>
+                                <td class="px-6 py-3 text-xs text-black-500">
+                                    {{ ugovor.korisnik}}
                                 </td>
+                                <td class="px-6 py-3 text-xs text-black-500 text-center">
+                                    {% if request.user.is_authenticated %}
+                                    {% if request.user.is_superuser %}
+                                    {% if ugovor.naplaceno == "NE" %}
+
+                                    <b class= "text-red-500">
+                                        {{ ugovor.naplaceno}}
+                                    </b>
+                                    {% else %}
+                                    <b class= "text-green-500">
+                                        {{ ugovor.naplaceno}}
+                                    </b>
+                                    {% endif %}
+                                </td>
+                             
+                                <td class="px-6 py-3 text-right text-xs font-medium">
+                                    
+                                    <button id="showModalButton"class="text-red-600 hover:text-red-900" data-pk="{{ ugovor.pk }}" {% if ugovor.ugovor_zakljucen == False %} onclick="showWarning()" {%else%}onclick="showModalPayment({{ ugovor.pk }})" {%endif%}>
+                                        Naplata
+                                    </button>
+                                    {%else%}
+                                    {%endif%}
+                                    {%endif%}   
+                                </td>
+                                
                             </tr>
 
                         {% endfor %}
                     </tbody>
                 </table>
+
+                </div>
+
+                <div class="paginations">
+                    <span class="step-links inline-flex -space-x-px text-sm space-y-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" style="
+                            margin-top: 8px">&laquo; Prva strana</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Prethodna</a>
+
+
+                        {% endif %}
+                
+                        <a class="flex space-y-2 items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" style="
+                        margin-top: 8px;">
+                            Strana {{ page_obj.number }} od {{ page_obj.paginator.num_pages }}</a>
+                
+                        {% if page_obj.has_next %}
+
+                            <a href="?page={{ page_obj.next_page_number }}" class="  flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Sljedeća strana</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class=" flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Posljednja strana &raquo;</a>
+                        {% endif %}
+                    </span>
+
                 </div>
             </div>
             </div>
         </div>
-</section>
+
+
+
+
+        </section>
+
+        <div class="fixed inset-0 flex items-center justify-center z-50" id="confirmPaymentModal" style="display: none;">
+            <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+            <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+              <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+                <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                  <path
+                   
+                  />
+                </svg>
+                <span class="text-sm">(Esc)</span>
+              </div>
+          
+              <!-- Modal content goes here -->
+              <div class="relative w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Naplata ugovora
+                        </h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal"  onclick="closeModalPayment()">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                   
+                    <form id='confirmPayment' action="" method="POST" class="mt-5" >
+        
+                        {% csrf_token %}
+                        <input id="pageId" type="hidden" name="page" value="{{ page_obj.number }}">
+                    <div class="p-6 space-y-6">
+                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                           Da li potvrđujete naplatu ugovora?
+                        </p>
+        
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"  onclick="confirmPaymentFunction()">Potvrdi</button>
+                        <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalPayment()">Odustani</button>
+                    </div>
+                    </form>
+                
+                </div>
+        
+            </div>
+            </div>
+          </div>
+
+
+          <div class="fixed inset-0 flex items-center justify-center z-50" id="warningModal" style="display: none;">
+            <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+            <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+              <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+                <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                  <path
+                   
+                  />
+                </svg>
+                <span class="text-sm">(Esc)</span>
+              </div>
+          
+              <!-- Modal content goes here -->
+              <div class="relative w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-black-900 dark:text-white">
+                            Naplata ugovora
+                        </h3>
+                        <button type="button" class="text-gray-black bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal"  onclick="hideWarning()">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+
+        
+
+                    <div class="p-6 space-y-6">
+                        <p class="text-base leading-relaxed text-black-500 dark:text-gray-400">
+                           Ugovor nije zaključen, ne može se označiti naplata!
+                        </p>
+        
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="hideWarning()">Odustani</button>
+                    </div>
+
+                </div>
+        
+            </div>
+            </div>
+          </div>
+
+        <script>
+            const context = {
+            onSubmit: result => {
+              console.log(result);
+              const contractPK = result.pk;
+              if (contractPK) {
+                window.open(`/ugovori/${contractPK}/izmjena`, '_blank');
+              }
+            },
+            // Other methods and properties if needed
+          };
+          
+          // Initialize the Autocomplete
+          new Autocomplete('#autocomplete', {
+            search: input => {
+              console.log(input);
+              const url = `/ugovori/search/?ime_kupac=${input}`;
+              return new Promise(resolve => {
+                fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log(data);
+                    resolve(data.data);
+                  });
+              });
+            },
+          
+            renderResult(result, index) {
+              const listItem = document.createElement('li');
+              listItem.classList.add('result-item');
+              listItem.dataset.resultIndex = index;
+              listItem.textContent = result.item;
+              listItem.value = result.pk;
+          
+              // Add a click event listener for onSubmit using the context
+              listItem.addEventListener('click', () => {
+                context.onSubmit(result);
+              });
+          
+              return listItem;
+            },
+          });
+    </script>
+       <script>
+            
+            var globalPk = null;
+            var pageTemp = null;
+
+            function confirmPaymentFunction() {
+                if (globalPk !== null) {
+                    var pageTemp = document.getElementById('pageId').value;
+                    var url = `/ugovori/${globalPk}/naplaceno/`;
+            
+                    // Serialize the form data
+                    var formData = $('#confirmPayment').serialize();
+            
+                    // Include the pageTemp value in the form data
+                    formData += `&pageTemp=${pageTemp}`;
+            
+                    // Send an AJAX POST request
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formData,
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                // Loop through messages and display them
+                                response.messages.forEach(function (message) {
+                                    showMessage(message.message); // Show the message directly
+                                });
+                            }
+
+
+                            window.location.href = `/ugovori/?page=${pageTemp}`;
+                        },
+                        error: function (error) {
+                            // Handle error (you can add your own error handling here)
+                            console.error('Error:', error.status);
+                        }
+                    });
+                }
+            }
+            function showMessage(messageText) {
+                // Create a message element and append it to a container
+                var messageElement = $('<div class="success bg-green-400 text-white py-2 px-4 rounded-md shadow-md"></div>').text(messageText);
+                $('.message-container').append(messageElement);
+            
+                // Remove the message after a delay (e.g., 5 seconds)
+                setTimeout(function () {
+                    messageElement.remove();
+                }, 10000); // 5000 milliseconds (5 seconds)
+            }
+
+
+            function showModalPayment(pk) {
+                globalPk = pk;
+                pageTemp = document.getElementById('pageId').value
+                document.getElementById('confirmPaymentModal').style.display = 'block';
+            }
+            
+            function closeModalPayment() {
+                globalPk = null; // Reset the globalPk variable when closing the modal
+                document.getElementById('confirmPaymentModal').style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('confirmPaymentModal')) {
+                    closeModalPayment();
+                }
+            }
+            
+            function getPageNumberFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('page');
+            }
+
+            function removeMessages() {
+                var messageBoxes = document.querySelectorAll('.message-container > div');
+            
+                messageBoxes.forEach(function (messageBox) {
+                    if (!messageBox.classList.contains('json-message')) {
+                        setTimeout(function () {
+                            messageBox.style.display = 'none';
+                        }, 4000); // 4000 milliseconds (4 seconds)
+                    }
+                });
+            }
+            // Call the removeMessages function when the page loads
+            window.onload = function() {
+                removeMessages();
+            };
+
+            function showWarning() {
+                var warningModal = document.getElementById("warningModal");
+                warningModal.style.display = "block";
+            }
+    
+            // Function to hide the warning modal
+            function hideWarning() {
+                var warningModal = document.getElementById("warningModal");
+                warningModal.style.display = "none";
+            }
+
+          </script>
+</body>
 {% endblock content%}
 
 

@@ -1,25 +1,265 @@
 {% extends 'base.html' %}
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-<div class="max-w-6xl mx-auto">
-    <a class="hover:text-blue-500" href="{% url 'kupoprodaja:lista-ugovora' %}">Idi nazad na ugovore</a>
+
+<head>
+    <style>
+        /* Add smooth scrolling to the body */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+<div class="max-w-6xl py-10 mx-auto">
+    <a class="hover:text-blue-500" href="{% url "kupoprodaja:lista-ugovora"%}?page=1">Idi nazad na ugovore</a>
     <div class="py-5 border-t border-gray-200">
         <h1 class="text-4xl text-gray-800">Dodaj novi ugovor</h1>
     </div>
-    <form method="POST" class="mt-5">
-        
-        <div class= "grid grid-cols-3 gap-3 justify-evenly">
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                py-2 px-4 rounded-md shadow-md">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <form action="{% url 'kupoprodaja:kreiraj-ugovor' %}" method="POST" class="mt-5" >
+
         {% csrf_token %}
-        {{ form|crispy }}
+
+
+    
+        <div class="m-2 space-y-2">
+            <div
+                class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+                tabindex="1"
+            >
+                <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content1')">
+                    <span> Komitent </span>
+                    <img
+                        src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                        class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+                    />
+                </div>
+                <div
+                    id="content1"
+                    class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+                >
+              
+                <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+                    {{ form.ime_komitent|as_crispy_field }}
+                    {{ form.jib_komitent|as_crispy_field }}
+                    {{ form.lk_komitent|as_crispy_field }}
+                    {{ form.ulica_komitent|as_crispy_field }}
+                    {{ form.grad_komitent|as_crispy_field }}
+                    {{ form.telefon_komitent|as_crispy_field }}
+                
+                </div>
+                </div>
+            </div>
+        
+            <!-- Repeat the same structure for other sections -->
+          
+            <div
+            class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+            tabindex="2"
+        >
+            <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content2')">
+                <span> Kupac </span>
+                <img
+                    src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                    class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+                />
+            </div>
+            <div
+                id="content2"
+                class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+            >
+         
+            <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+                {{ form.ime_kupac|as_crispy_field }}
+                {{ form.jib_kupac|as_crispy_field }}
+                {{ form.lk_kupac|as_crispy_field }}
+                {{ form.ulica_kupac|as_crispy_field }}
+                {{ form.grad_kupac|as_crispy_field }}
+                {{ form.telefon_kupac|as_crispy_field }}
+            
+            </div>
+            </div>
         </div>
+    
+        <!-- Repeat the same structure for other sections -->
+
+
+
+
+        <div
+        class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+        tabindex="3"
+    >
+        <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content3')">
+            <span> Podaci o vozilu</span>
+            <img
+                src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+            />
+        </div>
+        <div
+            id="content3"
+            class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+        >
+      
+        <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+            {{ form.vrsta_vozila|as_crispy_field }}
+            {{ form.marka_vozila|as_crispy_field }}
+            {{ form.opis|as_crispy_field }}
+            {{ form.broj_sasije|as_crispy_field }}
+            {{ form.broj_motora|as_crispy_field }}
+
+            {{ form.godiste|as_crispy_field }}
+
+            {{ form.zapremina|as_crispy_field }}
+            {{ form.snaga|as_crispy_field }}
+            {{ form.nosivost|as_crispy_field }}
+
+            {{ form.gorivo|as_crispy_field }}
+            {{ form.reg_oznaka|as_crispy_field }}
+            {{ form.masa_vozila|as_crispy_field }}
+
+            {{ form.vrijednost_vozila|as_crispy_field }}
+
+         
+
+        
+        </div>
+        </div>
+    </div>
+
+    <!-- Repeat the same structure for other sections -->
+
+
+
+
+
+    <div
+    class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+    tabindex="4"
+>
+    <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content4')">
+        <span> Podaci o ugovoru</span>
+        <img
+            src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+            class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+        />
+    </div>
+    <div
+        id="content4"
+        class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+    >
+    
+    <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+        {{ form.datum|as_crispy_field }}
+        {{ form.napomena|as_crispy_field }}
+
+        {{ form.mjesto_zakljucenja|as_crispy_field }}
+        {{ form.datum_preuzimanja|as_crispy_field }}
+   
+       
+        {{ form.vrijeme_preuzimanja|as_crispy_field }}
+        {{ form.broj_fiskalnog_racuna|as_crispy_field }}
+        {{ form.ima_punomoc|as_crispy_field }}
+        <div class="punomoc-fields">
+            {{ form.broj_punomoci|as_crispy_field }}
+        </div>
+        <div class="punomoc-fields">
+            {{ form.jmb_punomocnik|as_crispy_field }}
+        </div>
+        <div class="punomoc-fields">
+    
+            {{ form.lk_punomocnik|as_crispy_field }}
+        </div>
+  
+        
+    
+    </div>
+    </div>
+</div>
+
+<!-- Repeat the same structure for other sections -->
+
+
+        </div>
+        
+        <script>
+            function toggleContent(contentId) {
+                const content = document.getElementById(contentId);
+                content.classList.toggle('max-h-0');
+                content.classList.toggle('opacity-0');
+                content.classList.toggle('h-auto');
+            }
+
+
+            function removeMessages() {
+                var messageBoxes = document.querySelectorAll('.message-container > div');
+                messageBoxes.forEach(function(messageBox) {
+                    setTimeout(function() {
+                        messageBox.style.display = 'none';
+                    }, 4000);  // 3000 milliseconds (3 seconds)
+                });
+            }
+        
+            // Call the removeMessages function when the page loads
+            window.onload = function() {
+                removeMessages();
+            };
+            document.addEventListener('DOMContentLoaded', function() {
+                // vrijednost polja ima_punomoc
+                var imaPunomocCheckbox = document.getElementById('id_ima_punomoc');
+            
+                // svi elementi sa klasom 'punomoc-fields'
+                var punomocFields = document.getElementsByClassName('punomoc-fields');
+            
+                // provjera inicijalne vrijednosti i prikaz polja
+                for (var i = 0; i < punomocFields.length; i++) {
+                    if (imaPunomocCheckbox.checked) {
+                        punomocFields[i].style.display = 'block';
+                    } else {
+                        punomocFields[i].style.display = 'none';
+                    }
+                }
+            
+                //kontrola nakon izmjene ima_punomoc
+                imaPunomocCheckbox.addEventListener('change', function() {
+                    //Ako je ima_punomoc čekiran, prikaži polja, ili sakrij polja u suprotnom
+                    for (var i = 0; i < punomocFields.length; i++) {
+                        punomocFields[i].style.display = imaPunomocCheckbox.checked ? 'block' : 'none';
+                    }
+                });
+            });
+
+        </script>
+
         <button type='submit' class="w-1/3 text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">
             Sačuvaj
         </button>
+   
 
         
-    </form>
+        
+
 </div>
 
-{% endblock content %}
 
+</form>
+</body>
+
+{% endblock content %}

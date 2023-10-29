@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-k0&mi&!#r*w$8os#d+@*#$w$_a8fh9yh(lo82m-e$h!7smb8sf'
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','autougovori.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','autougovori.herokuapp.com', '192.168.0.198']
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -20,12 +20,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'kupoprodaja',
-  
+    #'invoice',
+    
     #third party apps
+    'report_builder',
+    #'albums',
+    'reportbro',
+    'report',
     'crispy_forms',
     'crispy_tailwind',
     'xhtml2pdf',
-    'bootstrap_datepicker_plus'
+    'bootstrap_datepicker_plus',
+    'num2words'
 ]
 
 
@@ -53,7 +59,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static'
             ],
+
         },
     },
 ]
@@ -97,9 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LOCALE_NAME="sr-Ltn"
+LANGUAGE_CODE = 'sr-latn'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Sarajevo'
 
 USE_I18N = True
 
@@ -132,3 +141,5 @@ DATE_INPUT_FORMATS="%d.%m.%Y"
 DATE_FORMAT = "%d.%m.%Y"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK='tailwind'
+REPORTBRO_STORAGE = 'django.core.files.storage.FileSystemStorage'
+REPORTBRO_STORAGE_KWARGS = {'location': os.path.join(BASE_DIR, 'report_files')}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load tailwind_filters %}
 {% block content %}
-<div class="max-w-lg mx-auto">
+<div class="max-w-full px-5 py-10 mx-auto  mx-auto">
     <a class="hover:text-blue-500" href="{% url 'kupoprodaja:lista-korisnika' %}">Idi nazad na korisnike</a>
     <div class="py-5 border-t border-gray-200">
         <h1 class="text-4xl text-gray-800">Dodaj novog korisnika</h1>
@@ -14,6 +14,32 @@
         </button>
     </form>
 </div>
-
+<script>
+    function hideElement() {
+        // Get the element by its ID
+        var elementToHide = document.getElementById("hint_id_username");
+    
+        // Check if the element exists
+        if (elementToHide) {
+            // Hide the element
+            elementToHide.style.display = "none";
+        } else {
+            console.error("Element not found!"); // Log an error if the element is not found
+        }
+    }
+    
+    // Call the function when the page loads
+    window.onload = hideElement;
+    
+    // Call the function when the DOM updates (using MutationObserver)
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            hideElement();
+        });
+    });
+    
+    // Observe changes to the DOM (subtree and childList mutations)
+    observer.observe(document.body, { subtree: true, childList: true });
+  </script>
 {% endblock content %}
 

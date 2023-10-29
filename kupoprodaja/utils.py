@@ -1,4 +1,6 @@
+import numbers
 from .models import Ugovor
+
 from django.db.models import Max
 from kupoprodaja.models import Ugovor
 from .forms import UgovorModelForma
@@ -6,7 +8,7 @@ from django.views.generic.edit import FormMixin, ModelFormMixin
 from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
-
+from num2words import num2words
 from xhtml2pdf import pisa
 
 def render_to_pdf(template_src, context_dict={}):
@@ -19,4 +21,10 @@ def render_to_pdf(template_src, context_dict={}):
     return None
 
 
-#'C:\Users\Dragan\Desktop\PythonDev\AutoUgovori\static\fonts\FreeSans\FreeSans.ttf'
+def number_to_letters(number):
+    try:
+        number = int(number)
+        return num2words(number, lang='sr').replace('-', '.').title()
+    except ValueError:
+        return "Nije validan broj."
+    

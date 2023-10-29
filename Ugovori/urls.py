@@ -11,9 +11,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name="landing-page"),
     path('ugovori/', include('kupoprodaja.urls', namespace='kupoprodaja')),
+    #path('fakture/', include('invoice.urls', namespace='fakture')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-
+    path('report_builder/', include('report_builder.urls')),
+    path('report/', include('report.urls', namespace='report') ),
+    #path('reports/', include('albums.urls', namespace='albumi')),
     ]
 
 if settings.DEBUG:

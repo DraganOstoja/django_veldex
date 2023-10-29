@@ -1,49 +1,582 @@
 {% extends 'base.html' %}
 {% load tailwind_filters %}
-{% block content%}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
 
-<section class="text-gray-700 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
-      <div class="lg:w-4/5 mx-auto flex flex-wrap">
-        <div class="w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-            <h2 class="text-sm title-font text-gray-500 tracking-widest"></h2>
-            <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ lead.first_name }} {{ lead.last_name }}</h1>
-            <div class="flex mb-4">
-                <a href="{% url 'kupoprodaja:detalji-ugovora' ugovor.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
-                    Detalji
-                </a>
-                <a href="{% url 'kupoprodaja:izmjena-ugovora' ugovor.pk %}" class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1">
-                    Izmjeni detalje
-                </a>
+<head>
+    <style>
+        /* Add smooth scrolling to the body */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+<div class="max-w-6xl py-10 mx-auto">
+    <a class="hover:text-blue-500" href="{% url 'kupoprodaja:lista-ugovora' %}?page=1">Idi nazad na ugovore</a>
+    <div class="py-5 border-t border-gray-200">
+        
+        <h1 class="text-4xl text-gray-800">Detalji ugovora </h1>
+    </div>
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                py-2 px-4 rounded-md shadow-md">
+                {{ message }}
             </div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div> 
-                    {% if messages %}
-                        <ul class="messages">
-                            {% for message in messages %}
-                        <li  {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }} </li>
-                    {% endfor %}
-                    </ul>
-                    {% endif %}
-                <div class= "grid grid-cols-3 gap-3 justify-evenly">
-                    
-                {{ form|crispy }}
+        {% endfor %}
+    </div>
+
+
+    <form id='IzmjenaUgovora'action="{% url 'kupoprodaja:izmjena-ugovora' ugovor.pk %}" method="POST" class="mt-5" >
+
+        {% csrf_token %}
+
+
+    
+        <div class="m-2 space-y-2">
+            <div
+                class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+                tabindex="1"
+            >
+                <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content1')">
+                    <span> Komitent </span>
+                    <img
+                        src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                        class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+                    />
+                </div>
+                <div
+                    id="content1"
+                    class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+                >
+              
+                <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+                    {{ form.ime_komitent|as_crispy_field }}
+                    {{ form.jib_komitent|as_crispy_field }}
+                    {{ form.lk_komitent|as_crispy_field }}
+                    {{ form.ulica_komitent|as_crispy_field }}
+                    {{ form.grad_komitent|as_crispy_field }}
+                    {{ form.telefon_komitent|as_crispy_field }}
+                </div>
+                </div>
             </div>
-                {% if not ugovor.ugovor_zakljucen %}
-                <button type="submit" class="w-full text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">Izmjeni</button>
-                {% endif %}
-            </form>
-            {% if ugovor.ugovor_zakljucen%}
-            <div class="mt-5 py-5 border-t border-gray-200">
-                <a href="{% url 'kupoprodaja:storno-request' ugovor.pk %}" class="w-1/2 mt-3 text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                    Zahtjev za storno
-                </a>
+        
+            <!-- Repeat the same structure for other sections -->
+          
+            <div
+            class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+            tabindex="2"
+        >
+            <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content2')">
+                <span> Kupac </span>
+                <img
+                    src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                    class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+                />
             </div>
-            {% endif %}
+            <div
+                id="content2"
+                class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+            >
+         
+            <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+                {{ form.ime_kupac|as_crispy_field }}
+                {{ form.jib_kupac|as_crispy_field }}
+                {{ form.lk_kupac|as_crispy_field }}
+                {{ form.ulica_kupac|as_crispy_field }}
+                {{ form.grad_kupac|as_crispy_field }}
+                {{ form.telefon_kupac|as_crispy_field }}
+            </div>
+            </div>
+        </div>
+    
+        <!-- Repeat the same structure for other sections -->
+        <div
+        class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+        tabindex="3"
+    >
+        <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content3')">
+            <span> Podaci o vozilu</span>
+            <img
+                src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+                class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+            />
+        </div>
+        <div
+            id="content3"
+            class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+        >
+      
+        <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+            {{ form.vrsta_vozila|as_crispy_field }}
+            {{ form.marka_vozila|as_crispy_field }}
+            {{ form.opis|as_crispy_field }}
+            {{ form.broj_sasije|as_crispy_field }}
+            {{ form.broj_motora|as_crispy_field }}
+
+            {{ form.godiste|as_crispy_field }}
+
+            {{ form.zapremina|as_crispy_field }}
+            {{ form.snaga|as_crispy_field }}
+            {{ form.nosivost|as_crispy_field }}
+
+            {{ form.gorivo|as_crispy_field }}
+            {{ form.reg_oznaka|as_crispy_field }}
+            {{ form.masa_vozila|as_crispy_field }}
+
+            {{ form.vrijednost_vozila|as_crispy_field }}
+
+         
+
+        
+        </div>
+        </div>
+    </div>
+
+    <!-- Repeat the same structure for other sections -->
+
+
+
+
+
+    <div
+    class="group flex flex-col gap-2 rounded-lg bg-gray-100 p-5 text-black"
+    tabindex="4"
+>
+    <div class="flex cursor-pointer items-center justify-between" onclick="toggleContent('content4')">
+        <span> Podaci o ugovoru </span>
+        <img
+            src="{{base_dir}}\static\pictures\dropdown_arrow.png"
+            class="h-2 w-3 transition-all duration-1500 transform group-hover:rotate-180"
+        />
+    </div>
+    <div
+        id="content4"
+        class="h-0 max-h-0 items-center opacity-0 overflow-hidden transition-all duration-1500 ease-in-out"
+    >
+    
+    <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+        {{ form.datum|as_crispy_field }}
+        {{ form.broj_ugovora|as_crispy_field }}
+        {{ form.napomena|as_crispy_field }}
+        {{ form.mjesto_zakljucenja|as_crispy_field }}
+        
+   
+        {{ form.datum_preuzimanja|as_crispy_field }}
+        {{ form.vrijeme_preuzimanja|as_crispy_field }}
+        {{ form.broj_fiskalnog_racuna|as_crispy_field }}
+        {{ form.ima_punomoc|as_crispy_field }}
+
+       
+        <div class="punomoc-fields">
+            {{ form.broj_punomoci|as_crispy_field }}
+        </div>
+        <div class="punomoc-fields">
+            {{ form.jmb_punomocnik|as_crispy_field }}
+        </div>
+        <div class="punomoc-fields">
+    
+            {{ form.lk_punomocnik|as_crispy_field }}
+        </div>
+      
+    
+    </div>
+    </div>
+</div>
+
+<!-- Repeat the same structure for other sections -->
+
+
+        </div>
+        
+        <script>
+            function toggleContent(contentId) {
+                const content = document.getElementById(contentId);
+                content.classList.toggle('max-h-0');
+                content.classList.toggle('opacity-0');
+                content.classList.toggle('h-auto');
+            }
+        </script>
+
+        {% if not ugovor.ugovor_zakljucen %}
+        <button type="submit" class="w-1/4 text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">Izmjeni</button>
+
+        <button type="button" class="w-1/4 text-white bg-yellow-500 hover:bg-yellow-600 px-3 py-2 rounded-md" onclick="showModalAccept()">Zaključi</button>
+        {% endif %}
+        {% if ugovor.ugovor_zakljucen%}
+        <div class="flex items-stretch gap-10 mt-5 py-5 border-t border-gray-200">
+            {% if request.user.is_superuser%} 
+            <input type="button" class="w-flex text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md" value="Pregled ugovora" onclick="window.open('pdf')">
+            {% else %}
+                {% if ugovor.ugovor_pregledan%}
+                <input type="button" class="w-flex text-white bg-yellow-500 hover:bg-yellow-600 px-3 py-2 rounded-md" value="Zahtjevaj novi pregled" onclick="showModalViewRequest()">
+                {% else %}
+                <input type="button" class="w-flex text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md" value="Pregled ugovora" onclick="viewOcured({{ugovor.pk}}); window.open('pdf')">
+
+                {% endif%}
+            {% endif%}
+
+            <input type="button" class="w-flex text-white bg-red-500 hover:bg-red-600 px-3 py-2 rounded-md" value="Zahtjev za storno" onclick="showModalStornoRequest()">
+            <input type="button" class="w-flex text-white bg-green-500 hover:bg-green-600 px-3 py-2 rounded-md" value="Potvrda uplate" onclick="showModalPaymentConfirm()">
+
+           
+        </div>
+        {% endif %}
+
+
+
+        
+</div>
+
+<!-- Modalni dijalog za zaključenje ugovora-->
+<div class="fixed inset-0 flex items-center justify-center z-50" id="acceptContract" style="display: none;">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path
+           
+          />
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+  
+      <!-- Modal content goes here -->
+      <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Zaključivanje ugovora
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal" onclick="closeModalAccept()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                   Da li želite zaključiti ugovor?
+                </p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="zakljuciUgovor({{ ugovor.pk }})">Potvrdi</button>
+                <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalAccept()">Odustani</button>
+            </div>
+        </div>
+
+    </div>
+    </div>
+  </div>
+
+
+<!-- Modalni dijalog za zahtjev za storno ugovora-->
+  <div class="fixed inset-0 flex items-center justify-center z-50" id="stornoRequest" style="display: none;">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path
+           
+          />
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+  
+      <!-- Modal content goes here -->
+      <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Storniranje ugovora
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal" onclick="closeModalStornoRequest()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                   Da li želite poslati zahtjev za storno?
+                </p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="requestStorno({{ ugovor.pk }})">Potvrdi</button>
+                <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalStornoRequest()">Odustani</button>
+            </div>
+        </div>
+
+    </div>
+    </div>
+  </div>
+
+
+
+  <!-- Modalni dijalog za potvrdu uplate-->
+  <div class="fixed inset-0 flex items-center justify-center z-50" id="paymentConfirm" style="display: none;">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path
+           
+          />
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+  
+      <!-- Modal content goes here -->
+      <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Naplata ugovora
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal" onclick="closeModalPaymentConfirm()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                   Da li je ugovor naplaćen?
+                </p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="paymentConfirm({{ ugovor.pk }})">Potvrdi</button>
+                <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalPaymentConfirm()">Odustani</button>
+            </div>
+        </div>
+
+    </div>
+    </div>
+  </div>
+
+
+    <!-- Modalni dijalog za potvrdu zahtjev za pregled-->
+    <div class="fixed inset-0 flex items-center justify-center z-50" id="viewRequest" style="display: none;">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+          <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+            <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path
+               
+              />
+            </svg>
+            <span class="text-sm">(Esc)</span>
+          </div>
+      
+          <!-- Modal content goes here -->
+          <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Naplata ugovora
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal" onclick="closeModalViewRequest()">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                       Da li želite poslati zahtjev za pregled?
+                    </p>
+    
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="viewRequest({{ ugovor.pk }})">Potvrdi</button>
+                    <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalViewRequest()">Odustani</button>
+                </div>
+            </div>
+    
+        </div>
         </div>
       </div>
-    </div>
-  </section>
+</form>
+<script>
 
-{% endblock content%}
+
+
+    function zakljuciUgovor(pk) {
+        var form = document.getElementById("IzmjenaUgovora");
+        form.action = "{% url 'kupoprodaja:zakljucenje-ugovora' 0 %}".replace("0", pk);
+        form.submit();
+    }
+    function requestStorno(pk) {
+        var form = document.getElementById("IzmjenaUgovora");
+        form.action = "{% url 'kupoprodaja:storno-request' 0 %}".replace("0", pk);
+        form.submit();
+    }
+
+    function paymentConfirm(pk) {
+        var form = document.getElementById("IzmjenaUgovora");
+        form.action = "{% url 'kupoprodaja:naplata' 0 %}".replace("0", pk);
+        form.submit();
+    }
+
+    function viewRequest(pk) {
+        var form = document.getElementById("IzmjenaUgovora");
+        form.action = "{% url 'kupoprodaja:zahtjev-pregled' 0 %}".replace("0", pk);
+        form.submit();
+    }
+
+    function viewOcured(pk) {
+        var form = document.getElementById("IzmjenaUgovora");
+        form.action = "{% url 'kupoprodaja:ugovor-pregledan' 0 %}".replace("0", pk);
+        form.submit();
+    }
+
+    var broj_ugovora=document.getElementById("id_broj_ugovora");
+          broj_ugovora.disabled = true;
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", broj_ugovora.name);
+          hiddenField.setAttribute("value", broj_ugovora.value);
+          broj_ugovora.form.appendChild(hiddenField); 
+
+                // Function to show the modal
+                function showModalAccept() {
+                    document.getElementById('acceptContract').style.display = 'block';
+                }
+                
+                // Function to hide the acceptContract modal
+                function closeModalAccept() {
+                    document.getElementById('acceptContract').style.display = 'none';
+                }
+                
+                // Function to show the stornoRequest modal
+                function showModalStornoRequest() {
+                    document.getElementById('stornoRequest').style.display = 'block';
+                }
+                
+                // Function to hide the stornoRequest modal
+                function closeModalStornoRequest() {
+                    document.getElementById('stornoRequest').style.display = 'none';
+                }
+                
+                // Function to show the paymentConfirm modal
+                function showModalPaymentConfirm() {
+                    document.getElementById('paymentConfirm').style.display = 'block';
+                }
+                
+                // Function to hide the paymentConfirm modal
+                function closeModalPaymentConfirm() {
+                    document.getElementById('paymentConfirm').style.display = 'none';
+                }
+
+                // function to show print request
+                function showModalViewRequest() {
+                    document.getElementById('viewRequest').style.display = 'block';
+                }
+                
+                // Function to hide the print request
+                function closeModalViewRequest() {
+                    document.getElementById('viewRequest').style.display = 'none';
+                }
+                
+                // Close the modal when clicking outside of it
+                window.onclick = function(event) {
+                    if (event.target == document.getElementById('acceptContract')) {
+                        closeModalAccept();
+                    }
+                    if (event.target == document.getElementById('stornoRequest')) {
+                        closeModalStornoRequest();
+                    }
+                    if (event.target == document.getElementById('paymentConfirm')) {
+                        closeModalPaymentConfirm();
+                    }
+                    if (event.target == document.getElementById('viewRequest')) {
+                        closeModalViewRequest();
+                    }
+                }
+                
+                // Close the modal when pressing the Esc key
+                document.onkeydown = function(event) {
+                    if (event.key === 'Escape') {
+                        closeModalAccept();
+                        closeModalStornoRequest();
+                        closeModalPaymentConfirm();
+                        closeModalViewRequest();
+                    }
+                }
+
+
+                function removeMessages() {
+                    var messageBoxes = document.querySelectorAll('.message-container > div');
+                    messageBoxes.forEach(function(messageBox) {
+                        setTimeout(function() {
+                            messageBox.style.display = 'none';
+                        }, 4000);  // 3000 milliseconds (3 seconds)
+                    });
+                }
+            
+                // Call the removeMessages function when the page loads
+                window.onload = function() {
+                    removeMessages();
+                };
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // vrijednost polja ima_punomoc
+                    var imaPunomocCheckbox = document.getElementById('id_ima_punomoc');
+                
+                    // svi elementi sa klasom 'punomoc-fields'
+                    var punomocFields = document.getElementsByClassName('punomoc-fields');
+                
+                    // provjera inicijalne vrijednosti i prikaz polja
+                    for (var i = 0; i < punomocFields.length; i++) {
+                        if (imaPunomocCheckbox.checked) {
+                            punomocFields[i].style.display = 'block';
+                        } else {
+                            punomocFields[i].style.display = 'none';
+                        }
+                    }
+                
+                    //kontrola nakon izmjene ima_punomoc
+                    imaPunomocCheckbox.addEventListener('change', function() {
+                        //Ako je ima_punomoc čekiran, prikaži polja, ili sakrij polja u suprotnom
+                        for (var i = 0; i < punomocFields.length; i++) {
+                            punomocFields[i].style.display = imaPunomocCheckbox.checked ? 'block' : 'none';
+                        }
+                    });
+                });
+
+
+</script>
+</body>
+
+{% endblock content %}

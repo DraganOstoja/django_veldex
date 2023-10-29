@@ -4,19 +4,29 @@
 
 <div class="max-w-lg mx-auto">
 <section class="text-gray-600 body-font">
-  <div class="container px-5 py-24 mx-auto">
+  <div class="container px-15 py-24 mx-auto">
     <div class="flex flex-wrap -m-4 text-center">
-      <div class="p-4 sm:w-1/3 w-1/2">
+      <div class="p-4 sm:w-1/4 w-1/2">
         <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{contract_count}}</h2>
-        <a href= "{% url "kupoprodaja:lista-ugovora"%}" class="leading-relaxed hover:text-blue-500">Ukupno odrađenih ugovora</a>
+        <a href= "{% url "kupoprodaja:lista-ugovora"%}?page=1" class="leading-relaxed hover:text-blue-500">Ukupno odrađenih ugovora</a>
       </div>
-      <div class="p-4 sm:w-1/3 w-1/2">
+
+      <div class="p-4 sm:w-1/4 w-1/2">
+        <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{contract_draft}}</h2>
+        <a href= "{% url "kupoprodaja:ugovor-nacrt" %}?page=1"class="leading-relaxed hover:text-blue-500">Nezaključeno</a>
+      </div>
+
+      <div class="p-4 sm:w-1/4 w-1/2">
         <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{storno_waiting}}</h2>
-        <a href= "{% url "kupoprodaja:storno-zahtjevi" %}"class="leading-relaxed hover:text-blue-500">Storna na odobrenju</a>
+        <a href= "{% url "kupoprodaja:storno-zahtjevi" %}?page=1"class="leading-relaxed hover:text-blue-500">Storna na odobrenju</a>
       </div>
-      <div class="p-4 sm:w-1/3 w-1/2">
+      <div class="p-4 sm:w-1/4 w-1/2">
         <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{contract_storno}}</h2>
-        <a href= "{% url "kupoprodaja:storno-odobren" %}" class="leading-relaxed hover:text-blue-500">Stornirani ugovori</a>
+        <a href= "{% url "kupoprodaja:storno-odobren" %}?page=1" class="leading-relaxed hover:text-blue-500">Stornirani ugovori</a>
+      </div>
+      <div class="p-4 sm:w-1/4 w-1/2">
+        <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{view_request}}</h2>
+        <a href= "{% url "kupoprodaja:lista-pregled" %}?page=1" class="leading-relaxed hover:text-blue-500">Zahtjevi za pregled</a>
       </div>
     </div>
   </div>
