@@ -25,7 +25,7 @@ from django.utils.dateparse import parse_date
 
 from openpyxl.styles import PatternFill
 from openpyxl import Workbook
-from report.views import report
+
 
 class LandingPageView(LoginRequiredMixin, TemplateView):
     
@@ -701,45 +701,7 @@ def export_excel(request):
     
     return response
 
-def RekapitulacijaNova (request):
-    user=request.user
-    ugovori= Ugovor.objects.filter(storno=False).filter(ugovor_zakljucen=True)
-    preduzece = get_object_or_404(Preduzece)
-   
-    if request.user.is_superuser:
-        ugovori= ugovori
-    else:
-        korisnik=User.objects.filter(poslovna_jedinica=user.poslovna_jedinica)
-        ugovori= ugovori.filter(korisnik_id__in=korisnik)
-    startdate=request.GET.get('start_date')
-    enddate=request.GET.get('end_date')
-    if is_valid_param(startdate):
-        ugovori=ugovori.filter(datum__gte=(startdate))
-    if is_valid_param(enddate):
-        ugovori=ugovori.filter(datum__lte=(enddate))
-    
-    ugovori_lista = []
-    
-    
-    for ugovor in ugovori:
-        
-        ugovori_lista.append({
-            'broj_ugovora': ugovor.broj_ugovora,
-            'ime_kupac': ugovor.ime_kupac,
-            'poslovna_jedinica': str(ugovor.business_unit),
-            'datum': ugovor.datum,
-            'jib_kupac': ugovor.jib_kupac,
-            'cijena_neto': ugovor.cijena_neto,
-            'pdv': ugovor.pdv,
-            'cijena': ugovor.cijena
-        })
-        
-        data = {
-            'ugovori': ugovori_lista,
-            'firma': preduzece
-        }
-    #print(type(data))
-    return report(request, 'rekapitulacija_ugovora', data)
+
 
 def bussines_unit_list(request):
     
