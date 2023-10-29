@@ -15,8 +15,7 @@ PyPDF2==1.26.0
 python-bidi==0.4.2
 pytz==2021.1
 qrcode==7.2
-reportbro-fpdf==1.7.11
-reportbro-lib==2.0.0
+
 num2words==0.5.12
 reportlab==3.6.11
 xhtml2pdf==0.2.5
