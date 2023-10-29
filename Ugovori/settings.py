@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     #'invoice',
     
     #third party apps
-    'report_builder',
+    #'report_builder',
     #'albums',
     'reportbro',
     'report',
