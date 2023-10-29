@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     #third party apps
     #'report_builder',
     #'albums',
-    'reportbro',
+    #'reportbro',
     'report',
     'crispy_forms',
     'crispy_tailwind',
