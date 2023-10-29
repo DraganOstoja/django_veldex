@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     #'report_builder',
     #'albums',
     #'reportbro',
-    'report',
+    #'report',
     'crispy_forms',
     'crispy_tailwind',
     'xhtml2pdf',
