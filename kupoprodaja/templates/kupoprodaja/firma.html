@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% block content%}
+
+
+<section class="text-gray-700 body-font overflow-hidden w-full">
+    <div class="container px-5 py-10 border-b border-gray-200 mx-auto w-full">
+      <div class="text-gray-700 body-font overflow-hidden w-full">
+        <div class="w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
+            
+                <a  class="text-4xl text-gray-700 body-font overflow-hidden w-full">
+                    Izmjena detalja o firmi
+                </a>
+                <div class="message-container">
+                  {% for message in messages %}
+                      <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                          {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                          {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                          py-2 px-4 rounded-md shadow-md {% if message.class %}{{ message.class }}{% endif %}">
+                          {{ message }}
+                      </div>
+                  {% endfor %}
+              </div>
+            </div>
+            
+            
+            <div class="text-gray-700 body-font overflow-hidden w-full">
+            <form method="POST" enctype="multipart/form-data">
+               
+                {% csrf_token %}
+                
+                {{ company_form.naziv|as_crispy_field}}
+                {{ company_form.adresa|as_crispy_field}}
+                {{ company_form.mjesto|as_crispy_field}}
+                {{ company_form.postanski_broj|as_crispy_field}}
+                {{ company_form.jib|as_crispy_field}}
+                {{ company_form.pib|as_crispy_field}}
+                {{ company_form.telefon|as_crispy_field}}
+                {{ company_form.fax|as_crispy_field}}
+                {{ company_form.zracun|as_crispy_field}}
+                {{ company_form.mail|as_crispy_field}}
+                {{ company_form.stopa_pdv|as_crispy_field}}
+                {{ company_form.broj_rjesenja|as_crispy_field}}
+                {{ company_form.porezni_broj|as_crispy_field}}
+                {{ company_form.web_site|as_crispy_field}}
+
+              
+                <button type="submit" class="w-full text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">Izmjeni</button>
+            </form>
+                </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    function removeMessages() {
+      var messageBoxes = document.querySelectorAll('.message-container > div');
+  
+      messageBoxes.forEach(function (messageBox) {
+          if (!messageBox.classList.contains('json-message')) {
+              setTimeout(function () {
+                  messageBox.style.display = 'none';
+              }, 4000); // 4000 milliseconds (4 seconds)
+          }
+      });
+  }
+  // Call the removeMessages function when the page loads
+  window.onload = function() {
+      removeMessages();
+  };
+  </script>
+{% endblock content%}

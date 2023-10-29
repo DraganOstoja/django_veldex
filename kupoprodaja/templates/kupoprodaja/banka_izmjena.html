@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<head>
+
+</head>
+
+<body>
+
+<div class="max-w-6xl py-10 mx-auto">
+    <a class="hover:text-blue-500" href="{% url "kupoprodaja:banke-lista"%}">Idi nazad na banke</a>
+    <div class="py-5 border-t border-gray-200">
+        <h1 class="text-4xl text-gray-800">Izmjena podataka</h1>
+    </div>
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                py-2 px-4 rounded-md shadow-md">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <form action="#" method="POST" class="mt-5" >
+
+        {% csrf_token %}
+
+        {{form|crispy}}
+    
+        
+        <button type='submit' class="w-1/3 text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">
+            Sačuvaj
+        </button>
+   </div>
+
+   <script>
+    function removeMessages() {
+        var messageBoxes = document.querySelectorAll('.message-container > div');
+        messageBoxes.forEach(function(messageBox) {
+            setTimeout(function() {
+                messageBox.style.display = 'none';
+            }, 4000);  // 3000 milliseconds (3 seconds)
+        });
+    }
+
+    // Call the removeMessages function when the page loads
+    window.onload = function() {
+        removeMessages();
+    };
+   </script>
+</form>
+</body>
+
+{% endblock content %}

@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% block content%}
+
+
+<head>
+    <style>
+        /* Add smooth scrolling to the body */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+<section class="text-gray-700 body-font">
+
+  <div class="container px-5 py-5 mx-auto flex flex-wrap">
+
+        <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
+          <div>
+              <h1 class="text-4xl text-gray-800">Zahtjevi za ponovni pregled i štampu</h1>
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full">
+            <div class="message-container">
+                {% for message in messages %}
+                    <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                        {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                        {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                        py-2 px-4 rounded-md shadow-md">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Broj
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Kupac
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            JMBG kupca
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Prodavac
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Vozilo
+                            </th>
+
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Datum
+                            </th>
+                            {% if request.user.is_superuser %}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">
+                            Odobriti
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Odbiti
+                            </th>
+                            {% endif %}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Korisnik
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ugovor in ugovori %}
+                            <tr class="bg-white">
+                                <td class="px-6 py-3 text-xs text-gray-500" >
+                                    {% if request.user.is_superuser %}
+                                        {% if ugovor.ugovor_zakljucen %}
+                                        <a class="text-blue-500 hover:text-blue-800" href="{% url 'kupoprodaja:ugovor' ugovor.pk %}" > {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                        {% else %}
+                                        <a class="text-black-500 hover:text-blue-800"> {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                        {% endif%}
+                                    {% else %}
+                                    
+                                    <a class="text-black-500 hover:text-blue-800"> {{ ugovor.broj_ugovora }}/{{ugovor.datum|date:'Y'}}</a>
+                                    
+                                    
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-3 text-xs font-medium text-gray-900">
+                                    <a class="text-black-500">{{ ugovor.ime_kupac }}</a>
+                                </td>
+                                <td class="px-6 py-3 text-xs text-gray-500">
+                                    {{ ugovor.jib_kupac }}
+                                </td>
+                                <td class="px-6 py-3 text-xs text-gray-500">
+                                    {{ ugovor.ime_komitent }}
+                                </td>
+                                <td class="px-6 py-3 text-xs text-gray-500">
+                                    {{ ugovor.marka_vozila }} {{ugovor.opis}}
+                                </td>
+
+                                <td class="px-6 py-3 text-xs text-gray-500">
+                                    {{ ugovor.datum|date:'d.m.Y'}}
+                                </td>
+                                {% if request.user.is_superuser %}
+                                
+                                <td class="px-6 py-3 text-left text-xs font-medium">
+                                    
+                                    <button id="OdobritiPregled" class="text-red-600 hover:text-red-900" data-pk="{{ ugovor.pk }}" onclick="showModalApprove({{ ugovor.pk }})" > Odobri</button>
+                                   
+                                </td>
+                                <td class="px-6 py-3 text-left text-xs font-medium">
+                                    <button id="OdbitiPregled" class="text-blue-600 hover:text-blue-900" data-pk="{{ ugovor.pk }}" onclick="showModalDiscard({{ ugovor.pk }})" > Odbij</button>
+
+                                </td>
+                                
+                                {% else %}
+                                {% endif %}
+                                <td class="px-6 py-3 text-left text-xs font-medium">
+                                    {{ugovor.korisnik.username}}
+                                    
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                <div class="paginations">
+                    <span class="step-links inline-flex -space-x-px text-sm space-y-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" style="
+                            margin-top: 8px">&laquo; Prva strana</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Prethodna</a>
+
+
+                        {% endif %}
+                
+                        <a class="flex space-y-2 items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" style="
+                        margin-top: 8px;">
+                            Strana {{ page_obj.number }} od {{ page_obj.paginator.num_pages }}</a>
+                
+                        {% if page_obj.has_next %}
+
+                            <a href="?page={{ page_obj.next_page_number }}" class="  flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Sljedeća strana</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class=" flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-blue-100 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Posljednja strana &raquo;</a>
+                        {% endif %}
+                    </span>
+
+                </div>
+            </div>
+            </div>
+        </div>
+</section>
+
+<!-- Modalni dijalog za zahtjev za storno ugovora-->
+<div class="fixed inset-0 flex items-center justify-center z-50" id="viewApprove" style="display: none;">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path
+           
+          />
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+  
+      <!-- Modal content goes here -->
+      <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                   Dozvola novog pregleda
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal"  onclick="closeModalApprove()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id='viewConfirmForm' action="" method="POST" class="mt-5" >
+
+                {% csrf_token %}
+            <div class="p-6 space-y-6">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                   Da li dozvoljavate novi pregled i štampu ugovora?
+                </p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"  onclick="approveView()">Potvrdi</button>
+                <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalApprove()">Odustani</button>
+            </div>
+            </form>
+        </div>
+
+    </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="fixed inset-0 flex items-center justify-center z-50" id="viewDiscard" style="display: none;">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+        <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path
+           
+          />
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+  
+      <!-- Modal content goes here -->
+      <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Dozvola ponovnog pregleda
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="staticModal"  onclick="closeModalDiscard()">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id='viewDiscardForm' action="" method="POST" class="mt-5" >
+
+                {% csrf_token %}
+            <div class="p-6 space-y-6">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                   Da li odbijate novi pregled i štampu ugovora?
+                </p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="staticModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"  onclick="discardView()">Potvrdi</button>
+                <button data-modal-hide="staticModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onclick="closeModalDiscard()">Odustani</button>
+            </div>
+            </form>
+        </div>
+
+    </div>
+    </div>
+  </div>
+
+
+  <script>
+    var globalPkStorno = null;
+    
+        function approveView() { 
+            if (globalPkStorno !== null) {
+            var form = document.getElementById("viewConfirmForm");
+            form.action = `/ugovori/${globalPkStorno}/potvrdapregleda/`;
+            form.submit();
+            }
+        }
+
+        function discardView() {
+            if (globalPkStorno !== null) {
+            var form = document.getElementById("viewDiscardForm");
+            form.action = `/ugovori/${globalPkStorno}/odbijanjepregleda/`;
+            form.submit();
+            }
+        }
+
+        // Function to show the stornoRequest modal
+        function showModalApprove(pk) {
+            globalPkStorno = pk;
+            document.getElementById('viewApprove').style.display = 'block';
+        }
+
+        function showModalDiscard(pk) {
+            globalPkStorno = pk;
+            document.getElementById('viewDiscard').style.display = 'block';
+        }
+
+        // Function to hide the stornoRequest modal
+        function closeModalApprove() {
+            globalPkStorno = null; // Reset the globalPkStorno variable when closing the modal
+            document.getElementById('viewApprove').style.display = 'none';
+        }
+
+        function closeModalDiscard() {
+            globalPkStorno = null; // Reset the globalPkStorno variable when closing the modal
+            document.getElementById('viewDiscard').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('viewApprove')) {
+                closeModalApprove();
+            }
+            if (event.target == document.getElementById('viewDiscard')) {
+                closeModalDiscard();
+            }
+        }
+
+        // Close the modal when pressing the Esc key
+        document.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                closeModalApprove();
+            }
+            if (event.key === 'Escape') {
+                closeModalDiscard();
+            }
+}
+    function removeMessages() {
+        var messageBoxes = document.querySelectorAll('.message-container > div');
+        messageBoxes.forEach(function(messageBox) {
+            setTimeout(function() {
+                messageBox.style.display = 'none';
+            }, 4000);  // 3000 milliseconds (3 seconds)
+        });
+    }
+
+    // Call the removeMessages function when the page loads
+    window.onload = function() {
+        removeMessages();
+    };
+  </script>
+</body>
+{% endblock content%}

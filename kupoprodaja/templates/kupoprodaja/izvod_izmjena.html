@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% load static %}
+{% load l10n %}
+{% block content%}
+<head>
+  <script src="{% static "/js/jquery.js" %}"></script>
+ 
+  <!-- Select2 CSS -->
+  <link href="{% static "/css/select2.css" %}" rel="stylesheet" />
+  
+  <!-- Select2 JS -->
+  <script src="{% static "/js/select2.js" %}"></script>
+  
+</head>
+<body>
+<section class="text-gray-700 body-font overflow-hidden" >
+    <div class="container px-5 py-5 mx-auto">
+      <div class="lg:w-7/6 mx-auto flex flex-wrap">
+        <div class="w-full mb-6 py-6 flex justify-between items-center border-b border-gray-200">
+          <div>
+              <h1 class="text-4xl text-gray-800">Unos izvoda</h1>
+          </div>
+          <div>
+              <a class="text-red-500 hover:text-blue-500" href="{% url 'kupoprodaja:izvod-kreiraj' %}"> Novi izvod</a>
+          </div>
+        </div>
+
+        <div class="w-full lg:pr-2 lg:py-2 mb-6 lg:mb-0">
+          <div class="message-container">
+            {% for message in messages %}
+                <div class="{% if message.tags %}{% if "success" in message.tags %}bg-green-400 text-white{% endif %}
+                    {% if "error" in message.tags %}bg-red-400 text-white{% endif %}
+                    {% if "warning" in message.tags %}bg-yellow-400 text-white{% endif %}{% endif %}
+                    py-2 px-4 rounded-md shadow-md">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class= "grid grid-cols-5 gap-3 justify-evenly">     
+                
+                {{ form|crispy }}
+                {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+                {% endfor %}
+                </div>
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                  <table  class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-blue-300">
+                        <tr>
+                          <th scope="col" class="w-1 px-2 py-2 text-center text-xs font-medium text-black-500 uppercase tracking-wider">
+                          Korisnik
+                          </th>
+                          <th scope="col" class="w-2/5 px-2 py-2 text-center text-xs font-medium text-black-500 uppercase tracking-wider">
+                          Opis
+                          </th>
+                          <th scope="col" class="w-1 px-2 py-2 text-center text-xs font-medium text-black-500 uppercase tracking-wider">
+                          Uplata
+                          </th>
+                          <th scope="col" class="w-1 px-2 py-2 text-center text-xs font-medium text-black-500 uppercase tracking-wider">
+                          Isplata
+                          </th>
+                          <th scope="col" class="w-2 px-2 py-2 text-center text-xs font-medium text-black-500 uppercase tracking-wider">
+                           Brisanje
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="items-form">
+                        {{items.management_form}}
+                            
+                          {% for item in items %}
+                            
+                              <tr id="item-{{forloop.counter}}" class="item">
+
+                                  <td class="hidden">{{ item.id }}</td>
+                                  <td class="w-1 px-2 py-2 text-xs text-black-500" name="korisnik-uplatio" style="padding-bottom: 20px;">
+                                    
+                                    {{item.korisnik_uplatio}}
+                                   
+                                  </td>
+                                  <td class="w-2/5 px-2 py-2 text-xs text-black-500" >
+                                    
+                                    {{item.opis|as_crispy_field}}
+                                    
+                                  </td>
+                                  <td class="w-1 px-2 py-2 text-xs text-black-500">
+                                    {{item.uplata|as_crispy_field}}
+                                  </td>
+                                  <td class="w-1 px-2 py-2 text-xs text-black-500">
+                                    {{item.isplata|as_crispy_field}}
+                                  </td>
+
+                                  <td class="w-1/12 px-2 py-4 text-xs text-black-500 content-center">
+                                    {{item.DELETE|as_crispy_field}}
+                                  </td>
+                                </tr>
+
+                          {% endfor %}
+
+                        </tbody>
+                        <tr id="empty-form" class="hidden">
+
+                          <td class="hidden">{{ items.empty_form.id }}</td>
+                          <td class="w-1 px-2 py-2 text-xs text-black-500" style="padding-bottom: 20px;">
+                            {{items.empty_form.korisnik_uplatio}}
+                          </td>
+                          <td class="w-2/5 px-2 py-2 text-xs text-black-500" value=1>
+                            
+                            {{items.empty_form.opis|as_crispy_field}}
+                            
+                          </td>
+                          <td class="w-1 px-2 py-2 text-xs text-black-500" value=0>
+                            {{items.empty_form.uplata|as_crispy_field}}
+                          </td>
+                          <td class="w-1 px-2 py-2 text-xs text-black-500" value=0>
+                            {{items.empty_form.isplata|as_crispy_field}}
+                          </td>
+
+                          <td class="w-1/12 px-2 py-2 text-xs text-black-500">
+                            {{items.empty_form.DELETE|as_crispy_field}}
+                          </td>
+                        </tr>
+                  </table>
+                </div>
+                {% if not invoice.accepted %}
+                <input type="submit"  class="w-1/5 text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md" value="Snimi"/>
+                <button id="add-more" class="w-1/5 text-white bg-blue-800 hover:bg-blue-900 px-3 py-2 rounded-md" value="Dodaj stavku">Dodaj stavku</button>
+                {%endif%}
+                {% if invoice.accepted %}
+                <input type="button" class="w-1/5 text-white bg-yellow-400 hover:bg-yellow-500 px-3 py-2 rounded-md" value="Račun" onclick="window.open('pdf')">
+                <input type="button" class="w-1/5 text-white bg-green-500 hover:bg-green-600 px-3 py-2 rounded-md" value="Uplata" onclick="window.open('potvrdauplate')">
+                <input type="button" class="w-1/5 text-white bg-red-500 hover:bg-red-600 px-3 py-2 rounded-md" value="Storno" onclick="window.open('storno')">
+                {%endif%}
+            </form>
+         
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <script>
+      const addMoreBtn = document.getElementById('add-more')
+      const totalNewForms = document.getElementById('id_stavkebankovnogizvoda_set-TOTAL_FORMS')
+      addMoreBtn.addEventListener('click', add_new_form)
+      function add_new_form(event){
+        if (event) {
+          event.preventDefault()
+        }
+        const currentItemsForms = document.getElementsByClassName('item')
+        const currentFormCount = currentItemsForms.length
+        const formCopyTarget = document.getElementById('items-form')
+        const copyEmptyFormEl = document.getElementById('empty-form').cloneNode(true)
+        copyEmptyFormEl.setAttribute('class', 'item')
+        copyEmptyFormEl.setAttribute('id', `item-${currentFormCount+1}`)
+        
+        copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(/__prefix__/g, currentFormCount)
+        totalNewForms.setAttribute('value', currentFormCount + 1)
+        formCopyTarget.append(copyEmptyFormEl)
+        initializeSelect2ForNewRow($(copyEmptyFormEl));
+      };
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function (){
+      var labels = document.getElementsByTagName("label");
+      var items = document.getElementsByClassName('item');
+      
+      for (var i = 0; i < labels.length; i++) {
+        for (var j = 0; j < items.length; j++) {
+          if (labels[i].htmlFor == `id_stavkebankovnogizvoda_set-${j}-DELETE`) {
+            labels[i].style.display = "none";
+          }
+        }
+      }
+    });
+
+    function removeMessages() {
+      var messageBoxes = document.querySelectorAll('.message-container > div');
+      messageBoxes.forEach(function(messageBox) {
+          setTimeout(function() {
+              messageBox.style.display = 'none';
+          }, 4000);  // 3000 milliseconds (3 seconds)
+      });
+  }
+
+  // Call the removeMessages function when the page loads
+  window.onload = function() {
+      removeMessages();
+  };
+
+
+  function initializeSelect2() {
+    // Apply Select2 to all matching elements inside #items-form
+    $('#items-form select[name^="stavkebankovnogizvoda_set-"][name$="-korisnik_uplatio"]').select2({
+      width: '100%',  // Set width to 100%
+      height: '100%'  // Set height to 100%
+    });
+  }
+
+  // Wait for the document to be fully loaded
+  $(document).ready(function() {
+    // Call the function to initialize Select2 with 100% width and height
+    initializeSelect2();
+  });
+
+
+  function initializeSelect2ForNewRow(row) {
+    row.find('select[name^="stavkebankovnogizvoda_set-"][name$="-korisnik_uplatio"]').select2({
+      width: '100%',
+      height: '100%'
+    });
+  }
+
+
+ //formatiranje brojeva
+  </script>
+
+</body>
+{% endblock content%}

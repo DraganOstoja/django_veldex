@@ -1,0 +1,338 @@
+
+{% load static %}
+{% load l10n %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+        {% load static %}
+        <title>Kif</title>
+
+       
+
+        <style type="text/css">
+
+            #upp{
+                width: 100%;
+            }
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            @font-face {
+                font-family: 'FreeSansBold';
+                src: '{{base_dir}}\static\fonts\FreeSans\FreeSansBold.ttf';
+                } 
+
+            @font-face {
+            font-family: 'FreeSans';
+            src: '{{base_dir}}\static\fonts\FreeSans\FreeSans.ttf';
+            } 
+            .header {
+                font-family: 'FreeSans';
+                font-size: 14px;
+                font-weight: 100;
+                text-align: center;
+                color: #0000FF;
+            }
+            .headerBold {
+                font-family: 'FreeSans';
+                font-size: 14px;
+                font-weight: 100;
+                text-align: center;
+                color: #0000FF;
+            }
+            
+            .title {
+                font-size: 16px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                font-family: 'FreeSans';
+                font-size: 11px;
+                padding: 5px 5px 0px 30px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsCenter {
+
+                font-family: 'FreeSans';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: center !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsLarge {
+
+                font-family: 'FreeSans';
+                font-size: 12px;
+                font-weight: 200;
+                padding: 10px 20px 0px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .detailsLeft {
+
+                font-family: 'FreeSans';
+                font-size: 14px;
+                font-weight: 200;
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .detailsLeftSmall {
+
+                font-family: 'FreeSans';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 0px 20px 0px 5px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .detailsRight {
+
+                font-family: 'FreeSans';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
+                
+            }
+
+            .detailsRightLarge {
+
+                font-family: 'FreeSans';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 5px 5px 0px 5px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .detailsheader {
+
+                font-family: 'FreeSans';
+                font-size: 13px;
+                font-weight: 100;
+                padding: 10px 20px 0px 20px;
+                text-align: center !important;
+                /*margin-left: 40%;*/
+                
+            }
+            .hrItem {
+                border: none;
+                height: 0.5px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            .alignright {
+            padding-right: 100px;
+            }
+            .HeaderDetailsLeft {
+
+                font-family: 'FreeSansBold';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .HeaderDetailsLeftLarge {
+
+                font-family: 'FreeSansBold';
+                font-size: 15px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: left !important;
+                /*margin-left: 0%;*/
+                
+            }
+            .HeaderDetailsRight {
+
+                font-family: 'FreeSansBold';
+                font-size: 11px;
+                font-weight: 200;
+                padding: 0px 10px 0px 10px;
+                text-align: right !important;
+                /*margin-left: 0%;*/
+                
+            }
+            
+        </style>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="header_content">
+        
+                <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class='HeaderDetailsLeft' style="width: 38%">
+                            <p class='HeaderDetailsLeftLarge'>{{firma.naziv}} </p>
+                            <p> {{firma.adresa}},{{firma.mjesto}} </p>
+                            <p> ID:{{firma.jib}} </p>
+                            <p> Br.rješenja:{{firma.broj_rjesenja}} </p>
+                            <p> Porezni broj: {{firma.porezni_broj}} </p>
+                        </td>
+                        <td  style="width: 18%"> 
+                                <img src="{{base_dir}}\static\pictures\veldex_mala.jpg"/>
+                        </td>
+                        <td class='HeaderDetailsRight' style="width: 27%">
+                            <p>Tel/Faks: {{firma.fax}} </p>
+                            <p> Mob: {{firma.telefon}}</p>
+                            <p> {{firma.mail}} </p>
+                            <p> {{firma.web_site}} </p>
+
+                        </td>
+                        <td  style="width: 17%">
+                            <img src="{{base_dir}}\static\pictures\qr_dokumentacija.png"/>
+                        </td>
+                    </tr>
+                </table>
+                <hr class='hrItem' />
+
+        </div>
+
+       
+        {% for user in user_data%}
+        <a class='HeaderDetailsLeft' >Korisnik: {{user.first_name}} {{user.last_name}}, {{user.adresa}} {{user.mjesto}}, JMB:{{user.jmb_korisnika|cut:'.'}}, LK: {{user.licna_karta}}, broj telefona: {{user.broj_telefona}}</a>
+        {%endfor%}
+
+        
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'> Rekapitulacija za period: {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}}
+                </p>       
+            </div>
+        <div>
+        <div>
+            <div class="HeaderDetailsLeftLarge">Rekapitulacija za period
+            </div>
+            <table id="zaduzeno" width="100%" border="0.5" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class='detailsCenter' style="width: 70%">Opis promjene:</td>
+                    <td class='detailsCenter' style="width: 30%">Iznos:</td>
+                </tr>
+                <tr>
+                    <td class='detailsLeftSmall' style="width: 70%"> 1. Odrađeno ugovora do {{start|date:"d.m.Y."}} (u KM):</td>
+                    <td class='detailsRight' style="width: 30%">{{total_iznos_sum_prije|floatformat:2}} KM</td>
+                </tr>
+                <tr>
+                    <td class='detailsLeftSmall' style="width: 70%"> 2. Odrađeno ugovora u periodu {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}} (u KM):</td>
+                    <td class='detailsRight' style="width: 30%">{{total_iznos_sum|floatformat:2}} KM</td>
+                </tr>
+
+                <tr>
+                    <td class='detailsLeftSmall' style="width: 70%">3. Stornirano do {{start|date:"d.m.Y."}} (u KM):</td>
+                    <td class='detailsRight' style="width: 30%">{{contracts_sum_storno_prije|floatformat:2}} KM</td>
+                </tr>
+                <tr>
+                    <td class='detailsLeftSmall' style="width: 70%">4. Stornirano ugovora u periodu {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}} (u KM):</td>
+                    <td class='detailsRight' style="width: 30%">{{total_storno_sum|floatformat:2}} KM</td>
+                </tr>
+                <tr>
+
+                    <td class='detailsLeftSmall' style="width: 70%">5. Ukupno uplaćeno do {{start|date:"d.m.Y."}} (u KM)</td>
+                    <td class='detailsRight'style="width: 30%">{{uplata_sum_prije|floatformat:2}} KM</td>
+                </tr>
+                <tr>
+
+                    <td class='detailsLeftSmall' style="width: 70%">6. Ukupno uplaćeno u periodu {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}} (u KM)</td>
+                    <td class='detailsRight'style="width: 30%">{{uplata_sum|floatformat:2}} KM</td>
+                </tr> 
+
+                <tr>
+
+                    <td class='detailsLeftSmall' style="width: 70%">Za doplatu (1+2-5-6)(u KM):</td>
+                    <td class='detailsRight'style="width: 30%">{{uplatiti|floatformat:2}} KM</td>
+                </tr> 
+            </table>
+        </br>
+            <div class="HeaderDetailsLeftLarge">Pregled uplata za period {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}}
+            </div>
+            <table id="uplate" width="100%" border="0.5" cellspacing="0" cellpadding="0">
+
+                    <tr>
+                            <td class='detailsCenter' style="width: 25%">Broj izvoda i banka</td>
+                            <td class='details' style="width: 30%">Opis</td>
+                            <td class='detailsCenter' style="width: 20%">Datum</td>
+                            <td class='detailsCenter'style="width: 25%">Iznos uplate</td>
+
+                    </tr> 
+                    {% for result in results%}
+
+                    {% if result.uplata != 0 %}
+                    <tr>
+                        <td class='detailsCenter' style="width: 25%">{{result.id_bankovni_izvod__broj_izvoda}}. {{result.id_bankovni_izvod__banka__naziv_banke}}</td>
+                        <td class='detailsLeftSmall' style="width: 30%">{{result.opis}}</td>
+                        <td class='detailsCenter' style="width: 20%">{{result.id_bankovni_izvod__datum_izvoda|date:"d.m.Y."}}</td>
+                        <td class='detailsRight'style="width: 25%">{{result.uplata|floatformat:2}} KM</td>
+
+                    </tr> 
+
+                        {%endif%}
+                    {% endfor%}
+                    <tr>
+                        <td class='detailsCenter' style="width: 25%"></td>
+                        <td class='details' style="width: 30%"></td>
+                        <td class='detailsCenter' style="width: 20%">Ukupno uplaćeno</td>
+                        <td class='detailsRight'style="width: 25%">{{uplata_sum|floatformat:2}} KM</td>
+                    </tr> 
+
+                </table>
+            </br>
+                <div class="HeaderDetailsLeftLarge" >Pregled isplata za period {{start|date:"d.m.Y."}} do {{end|date:"d.m.Y."}}
+                </div>
+                <table id="isplate" width="100%" border="0.5" cellspacing="0" cellpadding="0">
+
+                    <tr>
+                            <td class='detailsCenter' style="width: 25%">Broj izvoda i banka</td>
+                            <td class='details' style="width: 30%">Opis</td>
+                            <td class='detailsCenter' style="width: 20%">Datum</td>
+                            <td class='detailsCenter'style="width: 25%">Iznos isplate</td>
+
+                    </tr> 
+                    {% for result in results_isplata%}
+                        {% if result.isplata != 0 %}
+                    <tr>
+                        <td class='detailsCenter' style="width: 25%">{{result.id_bankovni_izvod__broj_izvoda}}. {{result.id_bankovni_izvod__banka__naziv_banke}}</td>
+                        <td class='detailsLeftSmall' style="width: 30%">{{result.opis}}</td>
+                        <td class='detailsCenter' style="width: 20%">{{result.id_bankovni_izvod__datum_izvoda|date:"d.m.Y."}}</td>
+                        <td class='detailsRight'style="width: 25%">{{result.isplata|floatformat:2}} KM</td>
+
+                    </tr> 
+                        {% endif %}
+                    {% endfor%}
+                    <tr>
+                        <td class='detailsCenter' style="width: 25%"></td>
+                        <td class='details' style="width: 30%"></td>
+                        <td class='detailsCenter' style="width: 20%">Ukupno isplate (u KM)</td>
+                        <td class='detailsRight'style="width: 25%">{{isplata_sum|floatformat:2}} KM</td>
+
+                    </tr> 
+                </table>
+        </div>
+     
+       
+        </div>   
+    </div>
+    <div>
+    <hr class='hrItem' />
+
+
+    </body>
+</html>
