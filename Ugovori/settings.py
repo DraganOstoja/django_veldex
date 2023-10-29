@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-k0&mi&!#r*w$8os#d+@*#$w$_a8fh9yh(lo82m-e$h!7smb8sf
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','autougovori.herokuapp.com', '192.168.0.198']
+ALLOWED_HOSTS = ['127.0.0.1','autougovori.herokuapp.com', '192.168.0.198', 'autougovori-b3a868c4d123.herokuapp.com']
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
