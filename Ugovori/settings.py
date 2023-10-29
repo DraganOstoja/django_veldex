@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-k0&mi&!#r*w$8os#d+@*#$w$_a8fh9yh(lo82m-e$h!7smb8sf'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1','autougovori.herokuapp.com', '192.168.0.198']
 
