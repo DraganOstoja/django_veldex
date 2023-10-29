@@ -15,7 +15,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     
-    path('report/', include('report.urls', namespace='report') ),
+    
     #path('reports/', include('albums.urls', namespace='albumi')),
     ]
 
