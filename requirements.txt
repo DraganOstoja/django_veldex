@@ -19,7 +19,7 @@ qrcode==7.2
 num2words==0.5.12
 reportlab==3.6.5
 xhtml2pdf==0.2.5
-
+openpyxl==2.6.0
 six==1.16.0
 sqlparse==0.4.1
 webencodings==0.5.1
