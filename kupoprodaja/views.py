@@ -543,49 +543,41 @@ class GenerateInvoiceList(LoginRequiredMixin,View):
         return HttpResponse("Not found")
     
 def ReportView(request):
-    pregled = request.GET.get('Report_type')
-    user = request.user
-    ugovor = Ugovor.objects.filter(storno=False).filter(ugovor_zakljucen=True)
+    pregled=request.GET.get('Report_type')
+    user=request.user
+    ugovor= Ugovor.objects.filter(storno=False).filter(ugovor_zakljucen=True)
     korisnik = User.objects.all()
-    usr = User.objects.all()
-
+    usr= User.objects.all()
     if request.user.is_superuser:
-        ugovor = ugovor
+        ugovor= ugovor
     else:
-        korisnik = User.objects.filter(poslovna_jedinica=user.poslovna_jedinica)
-        ugovor = ugovor.filter(korisnik_id__in=korisnik)
-
-    startdate = request.GET.get('start_date')
-    enddate = request.GET.get('end_date')
+        korisnik=User.objects.filter(poslovna_jedinica=user.poslovna_jedinica)
+        ugovor= ugovor.filter(korisnik_id__in=korisnik)
+    startdate=request.GET.get('start_date')
+    enddate=request.GET.get('end_date')
     user_filter = request.GET.get('User_selected')
-
     if is_valid_param(startdate):
-        ugovor = ugovor.filter(datum__gte=startdate)
+        ugovor=ugovor.filter(datum__gte=(startdate))
     if is_valid_param(enddate):
-        ugovor = ugovor.filter(datum__lte=enddate)
-
-    # Convert QuerySet to a list of dictionaries
-    ugovor_data = list(ugovor.values())
-
-    request.session['ugovor'] = ugovor_data
-    request.session['startdate'] = startdate
-    request.session['enddate'] = enddate
-    request.session['korisnik'] = user_filter
-
+        ugovor=ugovor.filter(datum__lte=(enddate))
+    request.session['ugovor']=ugovor
+    request.session['startdate']=startdate
+    request.session['enddate']=enddate
+    request.session['korisnik']=user_filter
+   
     if pregled == 'kif':
         return GenerateInvoiceList.as_view()(request)
-    elif pregled == 'uplate':
+    elif pregled =='uplate':
         return redirect('kupoprodaja:eksport')
-    elif pregled == 'fakture':
+    elif pregled =='fakture':
         return redirect('invoice:rekapitulacija')
-    elif pregled == 'uplate_fakture':
+    elif pregled =='uplate_fakture':
         return redirect('invoice:eksport-fakture')
-    elif pregled == 'rekapitulacija_zbirno':
+    elif pregled =='rekapitulacija_zbirno':
         return redirect('kupoprodaja:rekapitulacija-zbirno')
-    elif pregled == 'rekapitulacija_pojedinacno':
+    elif pregled =='rekapitulacija_pojedinacno':
         return redirect('kupoprodaja:rekapitulacija-pojedinacno')
-    
-    return render(request, 'kupoprodaja/reports.html', {'ugovori': ugovor_data, 'usr': usr})
+    return render(request, 'kupoprodaja/reports.html', {'ugovori': ugovor, 'usr': usr}) 
 def contract_payment(request, pk):
 
     ugovor = get_object_or_404(Ugovor, pk=pk)
