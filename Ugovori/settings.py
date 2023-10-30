@@ -46,9 +46,24 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
 ]
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_AGE = 5 * 60
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = None
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': os.environ.get('MEMCACHIER_SERVERS', '').replace(',', ';'),
+        'TIMEOUT': 500,
+        'BINARY': True,
+    }
+}
+
+SESSION_CACHE_ALIAS = 'default'
+SESSION_CACHE_KEY_PREFIX = 'my_cache_prefix'
+
+
 ROOT_URLCONF = 'Ugovori.urls'
 
 TEMPLATES = [
